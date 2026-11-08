@@ -32,8 +32,14 @@ public static class BuildScript
         var summary = report.summary;
         Debug.Log($"[BuildScript] Result: {summary.result}, errors: {summary.totalErrors}, " +
                   $"warnings: {summary.totalWarnings}, size: {summary.totalSize / (1024 * 1024)} MB, output: {summary.outputPath}");
-        if (summary.result != BuildResult.Succeeded)
+        // Unity can report Succeeded while logging errors (for example a lighting precompute
+        // that cannot run). Treat any reported error as a failed build so it gets looked at.
+        if (summary.result != BuildResult.Succeeded || summary.totalErrors > 0)
         {
+            foreach (var step in report.steps)
+                foreach (var message in step.messages)
+                    if (message.type == LogType.Error || message.type == LogType.Exception)
+                        Debug.LogWarning($"[BuildScript] Build error in step '{step.name}': {message.content}");
             // Throwing from -executeMethod makes batch-mode Unity exit with a non-zero code.
             throw new Exception($"[BuildScript] Player build failed: {summary.result} ({summary.totalErrors} errors).");
         }
