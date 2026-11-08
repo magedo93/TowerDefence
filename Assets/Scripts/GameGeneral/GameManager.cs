@@ -7,8 +7,9 @@ using UnityEngine.SceneManagement;
 
 namespace TowerDefence
 {
+    // The EnemyManager lives on its own object (it is also the base trigger) and is
+    // assigned to `enemyManager`; it is deliberately not a required component here.
     [RequireComponent(typeof(MoneyScript))]
-    [RequireComponent(typeof(EnemyManager))]
     public class GameManager : MonoBehaviour {
 
         public TextMeshProUGUI winningMsg;
@@ -37,7 +38,7 @@ namespace TowerDefence
             if (ended) return;
             ended = true;
             loosingMsg.gameObject.SetActive(true);
-            Invoke("BackToMenu", MenuReturnTime);
+            Invoke(nameof(BackToMenu), MenuReturnTime);
         }
 
         public void GameWin()
@@ -45,7 +46,7 @@ namespace TowerDefence
             if (ended) return;
             ended = true;
             winningMsg.gameObject.SetActive(true);
-            Invoke("BackToMenu", MenuReturnTime);
+            Invoke(nameof(BackToMenu), MenuReturnTime);
         }
 
         private void BackToMenu()

@@ -66,7 +66,6 @@ public class SceneIntegrityTests
                 .SelectMany(r => r.GetComponentsInChildren<Component>(true)).Where(c => c != null).ToList();
 
             // Only the EnemyManager that a GameManager actually uses must be configured.
-            // GameManager's [RequireComponent(EnemyManager)] also adds an unused, empty one.
             var usedEnemyManagers = new HashSet<UnityEngine.Object>(components
                 .Where(c => c.GetType().Name == "GameManager")
                 .Select(c => new SerializedObject(c).FindProperty("enemyManager")?.objectReferenceValue)
@@ -79,6 +78,7 @@ public class SceneIntegrityTests
             {
                 Assert.That(components.Count(c => c.GetType().Name == "GameManager"), Is.EqualTo(1), $"{scene.name}: exactly one GameManager");
                 Assert.That(usedEnemyManagers.Count, Is.EqualTo(1), $"{scene.name}: GameManager.enemyManager is assigned");
+                Assert.That(components.Count(c => c.GetType().Name == "EnemyManager"), Is.EqualTo(1), $"{scene.name}: exactly one EnemyManager (no unused leftovers)");
                 Assert.That(components.Count(c => c.GetType().Name == "BuildSpotScript"), Is.GreaterThan(0), $"{scene.name}: build spots");
             }
 

@@ -20,7 +20,7 @@ namespace TowerDefence
         {
             if (duration == 0.0f) return;
             time = 0;
-            Invoke("Destroy", duration);
+            Invoke(nameof(Destroy), duration);
             spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         }
 

@@ -318,7 +318,6 @@ GameObject:
   - component: {fileID: 68234139}
   - component: {fileID: 68234140}
   - component: {fileID: 68234141}
-  - component: {fileID: 68234142}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -492,25 +491,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &68234142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 68234136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74e7fa02c17bdc540bb13b564b9c580f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
-  playerHealth: {fileID: 0}
-  manager: {fileID: 0}
-  soldierPaths: []
-  vehiclekPaths: []
-  planePaths: []
-  waves: []
-  startTimeOffset: 0
 --- !u!1 &83357531
 GameObject:
   m_ObjectHideFlags: 0
@@ -18700,7 +18680,7 @@ MonoBehaviour:
   manager: {fileID: 68234140}
   soldierPaths:
   - {fileID: 587075953}
-  vehiclekPaths:
+  vehiclePaths:
   - {fileID: 1375737370}
   planePaths:
   - {fileID: 448697380}

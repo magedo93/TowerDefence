@@ -17,11 +17,11 @@ namespace TowerDefence
 
         public void StartGame(string levelName)
         {
-            Invoke("Run", timeOffset);
+            Invoke(nameof(Run), timeOffset);
 
             _currentDots = 0;
             text.text = "";
-            InvokeRepeating("UpdateDot", _dotTime, _dotTime);
+            InvokeRepeating(nameof(UpdateDot), _dotTime, _dotTime);
 
             _sceneName = levelName;
         }

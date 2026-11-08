@@ -32,7 +32,6 @@ public class LaserTowerTests
         _money.startingWealth = 100;
         var gameManager = manager.AddComponent<GameManager>();
         gameManager.enabled = false;
-        manager.GetComponent<EnemyManager>().enabled = false;
         manager.SetActive(true);
         _definition = ScriptableObject.CreateInstance<LaserTowerDefinition>();
         _created.Add(_definition);

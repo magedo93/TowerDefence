@@ -115,7 +115,7 @@ public class WaveSpawnTests
         var level = new Level { Root = Track(new GameObject("LevelRig")) };
         level.Root.SetActive(false);
         level.Game = level.Root.AddComponent<GameManager>();
-        level.Enemies = level.Root.GetComponent<EnemyManager>();
+        level.Enemies = level.Root.AddComponent<EnemyManager>();
         level.Player = level.Root.AddComponent<PlayerHealth>();
         var money = level.Root.GetComponent<MoneyScript>();
 
@@ -136,7 +136,7 @@ public class WaveSpawnTests
         level.Enemies.startTimeOffset = startTimeOffset;
         level.Enemies.waves = waves;
         level.Enemies.soldierPaths = new[] { level.SoldierPath };
-        level.Enemies.vehiclekPaths = new[] { level.VehiclePath };
+        level.Enemies.vehiclePaths = new[] { level.VehiclePath };
         level.Enemies.planePaths = new[] { level.PlanePath };
         return level;
     }
