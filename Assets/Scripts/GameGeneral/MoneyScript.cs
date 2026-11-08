@@ -57,14 +57,22 @@ public class MoneyScript : MonoBehaviour
         System.Action<BaseEventData> callback = (c) => AddBudgetWithSound(coinPrice);
         System.Action<EventTrigger> coinSetup = (c) =>
         {
-            var entry = new EventTrigger.Entry
+            // Coins are pooled, so this runs on every reuse. Use one dedicated runtime
+            // entry and replace its listener instead of appending a new entry each time,
+            // otherwise a reused coin would pay out once per previous use.
+            // The prefab's own PointerClick entry (persistent SetActive(false)) is untouched.
+            var entry = c.triggers.Find(e => e.eventID == EventTriggerType.PointerClick && e.callback.GetPersistentEventCount() == 0);
+            if (entry == null)
             {
-                eventID = EventTriggerType.PointerClick,
-                callback = new EventTrigger.TriggerEvent()
-            };
+                entry = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerClick,
+                    callback = new EventTrigger.TriggerEvent()
+                };
+                c.triggers.Add(entry);
+            }
+            entry.callback.RemoveAllListeners();
             entry.callback.AddListener(new UnityEngine.Events.UnityAction<BaseEventData>(callback));
-
-            c.triggers.Add(entry);
         };
 
         ObjectPooler.InstantiatePooled(coinType, position + new Vector3(Random.Range(-25.0f, 25.0f), Random.Range(-25.0f, 25.0f), 0), Quaternion.identity, coinSetup);

@@ -37,7 +37,8 @@ public class PlaneScript : MonoBehaviour
         else
         {
             if (_leftFire.activeInHierarchy || _rightFire.activeInHierarchy) return;
-            int r = Random.Range(0, 1);
+            // Int Random.Range excludes the max, so (0, 2) yields 0 or 1.
+            int r = Random.Range(0, 2);
             if (r == 0) _leftFire.SetActive(true);
             else _rightFire.SetActive(true);
         }

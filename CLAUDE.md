@@ -24,12 +24,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mod
 # Run Unity Test Framework tests
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mode PlayMode
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mode EditMode
+# Windows 64-bit player build of the enabled Build Settings scenes -> Builds/Windows/TowerDefense.exe
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mode Build
 ```
+
+- `-Mode Build` runs `BuildScript.BuildWindows` (`Assets/Editor/BuildScript.cs`, also under **Tools > Tower Defence > Build Windows Player**). It is the only check that catches Editor-only code (`using UnityEditor;` without `#if UNITY_EDITOR`) in runtime scripts, so run it after touching runtime code.
+- The game defines a global `Path` class (`Assets/Plugins/Paths`), which hides `System.IO.Path`. Write `System.IO.Path` explicitly.
 
 - The script finds the Editor through `-EditorPath`, then `$env:UNITY_EDITOR_PATH`, then the default Unity Hub install path. The Editor version must exactly match `ProjectVersion.txt`.
 - Each run writes `automation.log`, `Unity.log` and `TestResults.xml` to `AutomationLogs/<timestamp>-<mode>-<id>/`. A run fails on compiler errors found in the log even if Unity exits with 0. It also fails when zero tests execute.
 - The script has no test filter. To run a single test, use the Unity Test Runner window. Alternatively, call Unity directly with `-runTests -testPlatform PlayMode -testFilter <FullTestName>`.
-- PlayMode tests are in `Assets/Tests/PlayMode/` (assembly `TowerDefence.Laser.PlayModeTests`). Gameplay scripts have no asmdef, so they compile into `Assembly-CSharp`.
+- PlayMode tests are in `Assets/Tests/PlayMode/` (assembly `TowerDefence.Laser.PlayModeTests`): `LaserTowerTests` and `CoreGameplayTests` (pooling, coin payout on reuse, tower targeting). Gameplay scripts have no asmdef, so they compile into `Assembly-CSharp`, and tests reach them through reflection.
 
 ## Architecture
 

@@ -75,21 +75,22 @@ public class TowerScript : MonoBehaviour {
         }
     }
 
+    // Cached so pruning inactive targets does not allocate every frame.
+    private static readonly Predicate<GameObject> IsGone = go => go == null || !go.activeInHierarchy;
+
     public GameObject GetMostDistantInRange()
     {
-        var toRemove = new List<GameObject>();
+        if (_currentTargets == null) return null;
+
+        _currentTargets.RemoveWhere(IsGone);
+
         GameObject target = null;
         float maxDistance = 0;
 
         foreach (var enemy in _currentTargets)
         {
-            if (!enemy.activeInHierarchy)
-            {
-                toRemove.Add(enemy);
-                continue;
-            }
-
             var es = enemy.GetComponent<WalkerScript>();
+            if (es == null) continue;
             if (maxDistance < es.GetProgress())
             {
                 maxDistance = es.GetProgress();
@@ -97,21 +98,19 @@ public class TowerScript : MonoBehaviour {
             }
         }
 
-        for (int i = 0; i < toRemove.Count; i++)
-        {
-            _currentTargets.Remove(toRemove[i]);
-        }
-
         return target;
     }
 
     void OnTriggerEnter2D(Collider2D other)
-    {  
+    {
+        // Track only enemies; bullets, rockets and coins also have colliders.
+        if (_currentTargets == null || other.GetComponent<WalkerScript>() == null) return;
         _currentTargets.Add(other.gameObject);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        if (_currentTargets == null) return;
         _currentTargets.Remove(other.gameObject);
     }
 

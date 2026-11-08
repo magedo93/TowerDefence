@@ -12,10 +12,12 @@ Exit codes: 0 success; 1 validation, process, log or test failure.
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mode Compile
 .EXAMPLE
 .\Tools\unity-check.ps1 -Mode EditMode -EditorPath 'D:\Unity\Editor\Unity.exe'
+.EXAMPLE
+.\Tools\unity-check.ps1 -Mode Build   # Windows 64-bit player into Builds/Windows/
 #>
 [CmdletBinding()]
 param(
-    [ValidateSet('Check', 'Compile', 'EditMode', 'PlayMode')]
+    [ValidateSet('Check', 'Compile', 'EditMode', 'PlayMode', 'Build')]
     [string]$Mode = 'Check',
     [string]$ProjectPath,
     [string]$EditorPath,
@@ -239,6 +241,11 @@ try {
         if ($Mode -eq 'Compile') {
             $unityArguments += @('-nographics', '-quit')
         }
+        elseif ($Mode -eq 'Build') {
+            # Windows 64-bit player of the enabled Build Settings scenes (Assets/Editor/BuildScript.cs).
+            $buildOutput = Join-Path $projectRoot 'Builds/Windows/TowerDefense.exe'
+            $unityArguments += @('-quit', '-buildTarget', 'Win64', '-executeMethod', 'BuildScript.BuildWindows', '-buildOutput', $buildOutput)
+        }
         else {
             # The test runner owns shutdown. Keep graphics available for Play Mode.
             $unityArguments += @('-runTests', '-testPlatform', $Mode, '-testResults', $testResults)
@@ -270,7 +277,13 @@ try {
         # Inspect the actual log even if Unity reports a failing exit code.
         Assert-UnityLog $unityLog
         if ($unityProcess.ExitCode -ne 0) { throw "Unity exited with code $($unityProcess.ExitCode). Inspect '$unityLog'." }
-        if ($Mode -ne 'Compile') { Assert-TestResults $testResults }
+        if ($Mode -in @('EditMode', 'PlayMode')) { Assert-TestResults $testResults }
+        if ($Mode -eq 'Build') {
+            $buildLog = Get-Content -LiteralPath $unityLog -Raw
+            if ($buildLog -notmatch '\[BuildScript\] Player build succeeded\.') { throw "Build success marker missing from '$unityLog'." }
+            if (-not (Test-Path -LiteralPath $buildOutput -PathType Leaf)) { throw "Player executable missing: '$buildOutput'." }
+            Write-Status "Player build written to: $buildOutput"
+        }
         Write-Status "$Mode passed: Unity completed and its log contains no detected compilation/startup failures."
         if ($Mode -eq 'Compile') { Write-Status 'This validates Editor compilation, not a standalone player build.' }
     }

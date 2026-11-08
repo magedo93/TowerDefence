@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using UnityEditor;
 
 public class EnemyManager : MonoBehaviour {
 
@@ -97,7 +96,9 @@ public class EnemyManager : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        // Only enemies damage the base; ignore bullets, rockets and anything else.
         var enemy = other.gameObject.GetComponent<EnemyScript>();
+        if (enemy == null || !enemy.isActiveAndEnabled) return;
         playerHealth.TakeDamage(enemy.strength);
         enemy.Destroy(true);
     }
