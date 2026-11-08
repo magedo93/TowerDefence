@@ -45,7 +45,7 @@ public class LaserTowerScript : TowerScript
         base.OnDisable();
     }
 
-    protected override GameObject SelectTarget()
+    protected internal override GameObject SelectTarget()
     {
         // Query current overlaps rather than trusting trigger history across pooled
         // enemy reuse. This also picks up enemies already inside an upgraded range.

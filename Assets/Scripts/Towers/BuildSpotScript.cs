@@ -10,6 +10,9 @@ public class BuildSpotScript : MonoBehaviour
 
     private GameObject _build;
 
+    // The tower currently standing on this spot, or null.
+    internal GameObject BuiltTower => _build;
+
     private void Start()
     {
         _build = null;

@@ -8,7 +8,7 @@ public class WalkerScript : MonoBehaviour {
     public float rotationSpeed;
     public PathCreator pathCreator;
 
-    protected float movementProgress;
+    protected internal float movementProgress;
 
     protected virtual void OnEnable()
     {

@@ -39,7 +39,7 @@ public class TowerScript : MonoBehaviour {
 
     protected Transform GunTransform { get { return _gun.transform; } }
 
-    protected virtual GameObject SelectTarget()
+    protected internal virtual GameObject SelectTarget()
     {
         return GetMostDistantInRange();
     }
@@ -101,7 +101,7 @@ public class TowerScript : MonoBehaviour {
         return target;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    internal void OnTriggerEnter2D(Collider2D other)
     {
         // Track only enemies; bullets, rockets and coins also have colliders.
         if (_currentTargets == null || other.GetComponent<WalkerScript>() == null) return;

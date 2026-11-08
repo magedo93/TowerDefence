@@ -1,0 +1,23 @@
+{
+  "name": "TowerDefence.Editor",
+  "rootNamespace": "",
+  "references": [
+    "TowerDefence.Runtime",
+    "TowerDefence.Paths",
+    "Unity.InputSystem",
+    "Unity.TextMeshPro",
+    "UnityEngine.UI",
+    "Unity.2D.Tilemap.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
