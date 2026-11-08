@@ -27,8 +27,12 @@ namespace TowerDefence
         private GameObject _subwaveEnemy;
         private PathCreator _subwavePath;
 
+        private MoneyScript _money;
+
         void Start()
         {
+            // GameManager requires a MoneyScript on the same object.
+            _money = manager != null ? manager.GetComponent<MoneyScript>() : null;
             _waveId = 0;
             _subwaveId = 0;
             _subwaveProgress = 0;
@@ -88,7 +92,12 @@ namespace TowerDefence
             ++_subwaveProgress;
 
             manager.AddEnemy();
-            System.Action<WalkerScript> enemySetup = (c) => c.pathCreator = _subwavePath;
+            System.Action<WalkerScript> enemySetup = (c) =>
+            {
+                c.pathCreator = _subwavePath;
+                var enemy = c.GetComponent<EnemyScript>();
+                if (enemy != null) enemy.Init(manager, _money);
+            };
             ObjectPooler.InstantiatePooled(_subwaveEnemy, _subwavePath.GetStartPoint(), _subwavePath.GetStartRotation(), enemySetup);
 
             if (_subwaveProgress < waves[_waveId - 1].subwave[_subwaveId - 1].size)

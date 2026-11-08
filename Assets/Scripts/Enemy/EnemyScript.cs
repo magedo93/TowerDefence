@@ -15,13 +15,18 @@ namespace TowerDefence
         public int strength;
         public int reward;
 
+        // Called by EnemyManager's pool setup callback on every spawn (after OnEnable),
+        // so enemies no longer look the level up by GameObject name.
+        public void Init(GameManager manager, MoneyScript money)
+        {
+            _manager = manager;
+            _money = money;
+        }
+
         void OnEnable()
         {
             _enemyHealth = GetComponent<Health>();
             _enemyHealth.Initialize();
-            var go = GameObject.Find("GameManager");
-            _money = go.GetComponent<MoneyScript>();
-            _manager = go.GetComponent<GameManager>();
         }
 
         void OnDisable()
@@ -33,16 +38,20 @@ namespace TowerDefence
         {
             if (_enemyHealth.isDead)
             {
-                _money.AddBudget(reward);
-                _money.CreateCoin(transform.position);
+                if (_money != null)
+                {
+                    _money.AddBudget(reward);
+                    _money.CreateCoin(transform.position);
+                }
                 Destroy();
             }
         }
 
         public void Destroy(bool silent = false)
-        {  
+        {
             gameObject.SetActive(false);
-            _manager.RemoveEnemy();
+            // Only spawned enemies were counted by GameManager.AddEnemy.
+            if (_manager != null) _manager.RemoveEnemy();
             if (silent) return;
             var ds = gameObject.GetComponent<DestroyScript>();
             ds.Perform();      

@@ -24,6 +24,7 @@ public class WaveSpawnTests
 
     private readonly List<Object> _created = new List<Object>();
     private Transform _templates;
+    private GameObject _deathEffect;
 
     private T Track<T>(T obj) where T : Object { _created.Add(obj); return obj; }
 
@@ -41,6 +42,9 @@ public class WaveSpawnTests
         var holder = Track(new GameObject("Templates"));
         holder.SetActive(false);
         _templates = holder.transform;
+        // Stand-in for the blood/explosion prefab every real enemy spawns on death.
+        _deathEffect = new GameObject("TestDeathEffect");
+        _deathEffect.transform.SetParent(_templates, false);
     }
 
     [TearDown]
@@ -51,6 +55,8 @@ public class WaveSpawnTests
         for (int i = _created.Count - 1; i >= 0; i--)
             if (_created[i] != null) Object.DestroyImmediate(_created[i]);
         _created.Clear();
+        foreach (var t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include))
+            if (t != null && t.parent == null && t.name == "TestDeathEffect") Object.DestroyImmediate(t.gameObject);
         var pooler = GameObject.Find("#ObjectPooler");
         if (pooler != null) Object.DestroyImmediate(pooler);
     }
@@ -74,7 +80,8 @@ public class WaveSpawnTests
             new GameObject("Shadow").transform.SetParent(go.transform, false);
         }
         go.AddComponent<TMarker>(); // movementSpeed 0: enemies stay at the path start.
-        go.AddComponent<EnemyScript>();
+        go.AddComponent<EnemyScript>().reward = 5;
+        go.GetComponent<DestroyScript>().objectToSpawn = _deathEffect;
         go.AddComponent<SpawnProbe>();
         return go;
     }
@@ -104,7 +111,8 @@ public class WaveSpawnTests
     // Mirrors a level's GameManager object, but with test waves and paths.
     private Level BuildLevel(float startTimeOffset, params WaveProperties[] waves)
     {
-        var level = new Level { Root = Track(new GameObject("GameManager")) };
+        // Deliberately NOT named "GameManager": enemies must get the level injected, not look it up by name.
+        var level = new Level { Root = Track(new GameObject("LevelRig")) };
         level.Root.SetActive(false);
         level.Game = level.Root.AddComponent<GameManager>();
         level.Enemies = level.Root.GetComponent<EnemyManager>();
@@ -170,12 +178,21 @@ public class WaveSpawnTests
             Assert.That(walker.pathCreator, Is.SameAs(expectedPath), $"{enemy.name} path");
         }
 
+        // Killing an enemy pays its reward into the level's MoneyScript.
+        var money = level.Root.GetComponent<MoneyScript>();
+        int before = money.GetWealth();
+        log[0].enemy.GetComponent<Health>().TakeDamage(1000);
+        yield return null;
+        Assert.That(money.GetWealth(), Is.EqualTo(before + 5), "kill reward");
+        Assert.That(log[0].enemy.activeSelf, Is.False, "killed enemy returned to the pool");
+
         // Not won while enemies are still alive...
         yield return null;
         Assert.That(level.Game.winningMsg.gameObject.activeSelf, Is.False, "won while enemies alive");
 
         // ...but won once every spawned enemy is gone.
-        foreach (var (_, enemy) in log) enemy.GetComponent<EnemyScript>().Destroy(true);
+        foreach (var (_, enemy) in log)
+            if (enemy.activeSelf) enemy.GetComponent<EnemyScript>().Destroy(true);
         yield return null;
         yield return null;
         Assert.That(level.Game.winningMsg.gameObject.activeSelf, Is.True, "level should be won");

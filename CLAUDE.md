@@ -43,14 +43,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mod
 
 **Scenes** (`Assets/Scenes`): `MainMenu`, then `Level01`–`Level03`. `Loading.StartGame(levelName)` loads a level by name. `GameManager.BackToMenu` loads `"MainMenu"` by name, so renaming a scene breaks these calls.
 
-**GameManager object (one per level scene).** Several scripts find it with `GameObject.Find("GameManager")`, so the object's name is load-bearing. It carries:
+**GameManager object (one per level scene).** Nothing looks it up by name any more: `EnemyManager` hands each spawned enemy its `GameManager` and `MoneyScript` through `EnemyScript.Init` in the pool setup callback. It carries:
 - `GameManager`: win/lose state, the enemies-alive counter, and the tower type currently selected in the UI (`SetTowerToBuild`). The level is won when `enemiesAlive == 0` and `EnemyManager.WavesCompleted`.
 - `EnemyManager`: spawns waves through chained `Invoke` calls. Each enemy is assigned a path based on which marker component its prefab has: `Walker` → `soldierPaths`, `Vehicle` → `vehiclekPaths`, `Aircraft` → `planePaths`. Its trigger collider is the base: an enemy that enters it damages `PlayerHealth`.
 - `MoneyScript`: holds the budget (`TrySpend`, `AddBudget`) and spawns coins.
 
 **Waves** are `WaveProperties` ScriptableObjects in `Assets/Waves` (menu: Level/Wave). Each wave is a list of subwaves, and each subwave has an enemy prefab, a count and timings. They are assigned to `EnemyManager.waves` in each scene.
 
-**Enemies.** `EnemyScript` handles reward and death and requires `Health` and `DestroyScript`. Movement comes from a `WalkerScript` subclass (`TankScript`, `PlaneScript`) that follows a `PathCreator` path (`Assets/Plugins/Paths`). Spawning and despawning must keep `GameManager.AddEnemy`/`RemoveEnemy` balanced, or the level will never be won. `EnemyScript.Destroy(silent)` calls `RemoveEnemy`.
+**Enemies.** `EnemyScript` handles reward and death and requires `Health` and `DestroyScript`. Movement comes from a `WalkerScript` subclass (`TankScript`, `PlaneScript`) that follows a `PathCreator` path (`Assets/Plugins/Paths`). Spawning and despawning must keep `GameManager.AddEnemy`/`RemoveEnemy` balanced, or the level will never be won. `EnemyScript.Destroy(silent)` calls `RemoveEnemy`; enemies not spawned by `EnemyManager` (never `Init`-ed) are not counted and pay no reward.
 
 **Pooling.** Use `ObjectPooler.InstantiatePooled(prefab, pos, rot[, Action<T> setup])` for enemies, towers, bullets and coins. It is a lazily created static singleton keyed by prefab. Pooled objects are "destroyed" with `SetActive(false)` and reused. Put reset logic in `OnEnable`/`OnDisable`, not `Start`/`Awake`. The setup callback runs after `SetActive(true)`, which means it runs after `OnEnable`.
 
