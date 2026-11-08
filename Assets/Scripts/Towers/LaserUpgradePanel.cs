@@ -62,7 +62,7 @@ namespace TowerDefence
                 upgradeButton.interactable = false;
                 return;
             }
-            var next = _tower.definition.levels[_tower.CurrentLevel];
+            var next = _tower.LaserDefinition.levels[_tower.CurrentLevel];
             statsText.text += $"\nNext: {next.damagePerSecond:0.#}/sec   Range: {next.range:0}";
             upgradeText.text = $"UPGRADE  -  {next.upgradeCost} COINS";
             upgradeButton.interactable = _money.GetWealth() >= next.upgradeCost;

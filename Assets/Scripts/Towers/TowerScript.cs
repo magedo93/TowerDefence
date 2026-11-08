@@ -9,15 +9,26 @@ namespace TowerDefence
     [RequireComponent(typeof(AudioSource))]
     public class TowerScript : MonoBehaviour {
 
+        [Tooltip("Tower balance and setup. Projectile towers use a ProjectileTowerDefinition, the laser a LaserTowerDefinition.")]
+        public TowerDefinition definition;
+
+        [Header("Legacy (used only when no definition is assigned)")]
         public GameObject bulletPrefab;
         public int cost;
-        public virtual int BuildCost { get { return cost; } }
         public float rotationSpeed;
-
         public float cooldown;
-        private float _currentCooldown;
-
         public AudioClip gunShoot;
+
+        private ProjectileTowerDefinition Projectile { get { return definition as ProjectileTowerDefinition; } }
+
+        // Effective values: the definition when present, otherwise the legacy fields.
+        public int BuildCost { get { return definition != null ? definition.purchaseCost : cost; } }
+        public float Cooldown { get { return Projectile != null ? Projectile.cooldown : cooldown; } }
+        public float RotationSpeed { get { return Projectile != null ? Projectile.rotationSpeed : rotationSpeed; } }
+        public GameObject ProjectilePrefab { get { return Projectile != null ? Projectile.projectilePrefab : bulletPrefab; } }
+        public AudioClip FireSound { get { return Projectile != null ? Projectile.fireSound : gunShoot; } }
+
+        private float _currentCooldown;
         private AudioSource _aus;
 
         private HashSet<GameObject> _currentTargets;
@@ -34,8 +45,19 @@ namespace TowerDefence
 
         protected virtual void OnEnable()
         {
-            _currentCooldown = cooldown;
+            _currentCooldown = Cooldown;
             _currentTargets = new HashSet<GameObject>();
+            if (Projectile != null)
+            {
+                var range = GetComponent<CircleCollider2D>();
+                if (range != null) range.radius = Projectile.range;
+            }
+        }
+
+        // Keeps the legacy cost field (shown by older tools/labels) in sync with the definition.
+        protected virtual void OnValidate()
+        {
+            if (definition != null) cost = definition.purchaseCost;
         }
 
         public void Destroy()
@@ -66,7 +88,7 @@ namespace TowerDefence
             var change = target.transform.position - _gun.transform.position;
             var angle = Vector3.Angle(change, _gun.transform.up);
             if (Vector3.Cross(change, _gun.transform.up).z > 0) angle *= -1;
-            _gun.transform.Rotate(0, 0, angle * Time.deltaTime * rotationSpeed);
+            _gun.transform.Rotate(0, 0, angle * Time.deltaTime * RotationSpeed);
 
             UpdateAttack(target);
         }
@@ -77,7 +99,7 @@ namespace TowerDefence
             if (_currentCooldown > 0.0f) _currentCooldown -= Time.deltaTime;
             else
             {
-                _currentCooldown = cooldown;
+                _currentCooldown = Cooldown;
                 Shoot(target);
             }
         }
@@ -123,13 +145,15 @@ namespace TowerDefence
 
         public virtual void Shoot(GameObject target)
         {
+            var projectile = Projectile;
             System.Action<BulletScript> bulletSetup = (b) =>
             {
                 b.target = target;
                 b.source = gameObject;
+                if (projectile != null) b.damage = projectile.damage;
             };
-            _aus.PlayOneShot(gunShoot);
-            ObjectPooler.InstantiatePooled<BulletScript>(bulletPrefab, _gun.transform.position, _gun.transform.rotation, bulletSetup);
+            if (FireSound != null) _aus.PlayOneShot(FireSound);
+            ObjectPooler.InstantiatePooled<BulletScript>(ProjectilePrefab, _gun.transform.position, _gun.transform.rotation, bulletSetup);
 
         }
     }

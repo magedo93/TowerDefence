@@ -7,14 +7,14 @@ namespace TowerDefence
     [RequireComponent(typeof(CircleCollider2D))]
     public class LaserTowerScript : TowerScript
     {
-        public LaserTowerDefinition definition;
         public LayerMask enemyLayers;
         public float muzzleOffset = 25;
-        public override int BuildCost { get { return definition != null ? definition.purchaseCost : cost; } }
+        // The inherited TowerScript.definition must be a LaserTowerDefinition.
+        public LaserTowerDefinition LaserDefinition { get { return definition as LaserTowerDefinition; } }
 
         public int CurrentLevel { get; private set; } = 1;
-        public bool CanUpgrade { get { return definition != null && definition.IsValid && CurrentLevel < 3; } }
-        public LaserTowerDefinition.Level Stats { get { return definition.levels[CurrentLevel - 1]; } }
+        public bool CanUpgrade { get { return LaserDefinition != null && LaserDefinition.IsValid && CurrentLevel < 3; } }
+        public LaserTowerDefinition.Level Stats { get { return LaserDefinition.levels[CurrentLevel - 1]; } }
         public event System.Action LevelChanged;
 
         private readonly List<Collider2D> _overlaps = new List<Collider2D>(64);
@@ -31,7 +31,7 @@ namespace TowerDefence
             _upgrading = false;
             _overlaps.Clear();
             _beam.enabled = false;
-            if (definition == null || !definition.IsValid)
+            if (LaserDefinition == null || !LaserDefinition.IsValid)
             {
                 Debug.LogError("Laser Tower requires a valid three-level definition.", this);
                 enabled = false;
@@ -102,7 +102,7 @@ namespace TowerDefence
             _upgrading = true;
             try
             {
-                if (!money.TrySpend(definition.levels[CurrentLevel].upgradeCost)) return false;
+                if (!money.TrySpend(LaserDefinition.levels[CurrentLevel].upgradeCost)) return false;
                 CurrentLevel++;
                 ApplyLevel();
                 LevelChanged?.Invoke();
@@ -120,11 +120,6 @@ namespace TowerDefence
             _beam.endWidth = Stats.beamWidth * 0.5f;
             _beam.startColor = Stats.beamColor;
             _beam.endColor = Stats.beamColor;
-        }
-
-        private void OnValidate()
-        {
-            if (definition != null) cost = definition.purchaseCost;
         }
     }
 }

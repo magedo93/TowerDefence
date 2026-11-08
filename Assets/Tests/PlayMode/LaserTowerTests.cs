@@ -248,12 +248,12 @@ public class LaserTowerTests
                 if (prefab.name == "BulletTower")
                 {
                     Assert.That(tower.BuildCost, Is.EqualTo(3));
-                    Assert.That(tower.cooldown, Is.EqualTo(0.5f));
+                    Assert.That(tower.Cooldown, Is.EqualTo(0.5f));
                 }
                 else if (prefab.name == "RocketTower")
                 {
                     Assert.That(tower.BuildCost, Is.EqualTo(9));
-                    Assert.That(tower.cooldown, Is.EqualTo(5));
+                    Assert.That(tower.Cooldown, Is.EqualTo(5));
                 }
             }
             Assert.That(selectors, Is.EqualTo(3), sceneName);

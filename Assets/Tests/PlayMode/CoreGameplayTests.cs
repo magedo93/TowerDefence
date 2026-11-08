@@ -170,6 +170,47 @@ public class CoreGameplayTests
     }
 
     [Test]
+    public void ProjectileTower_TakesRangeCooldownAndDamageFromItsDefinition()
+    {
+        // Projectile template under an inactive parent, like a prefab asset.
+        var holder = Inactive("Templates");
+        var bulletTemplate = new GameObject("TestProjectile");
+        bulletTemplate.transform.SetParent(holder.transform, false);
+        bulletTemplate.AddComponent<BulletScript>().damage = 1;
+
+        var definition = ScriptableObject.CreateInstance<ProjectileTowerDefinition>();
+        _created.Add(definition);
+        definition.purchaseCost = 4;
+        definition.range = 123f;
+        definition.cooldown = 0.25f;
+        definition.damage = 7;
+        definition.projectilePrefab = bulletTemplate;
+
+        var root = Inactive("TestTower");
+        new GameObject("Gun").transform.SetParent(root.transform, false);
+        var range = root.AddComponent<CircleCollider2D>();
+        range.radius = 999f;
+        var tower = root.AddComponent<TowerScript>();
+        tower.cost = 99;
+        tower.cooldown = 99f;
+        tower.definition = definition;
+        root.SetActive(true);
+
+        Assert.That(tower.BuildCost, Is.EqualTo(4), "cost from definition");
+        Assert.That(tower.Cooldown, Is.EqualTo(0.25f), "cooldown from definition");
+        Assert.That(range.radius, Is.EqualTo(123f), "range applied to the collider");
+
+        tower.Shoot(Track(new GameObject("Target")));
+        BulletScript fired = null;
+        foreach (var bullet in Object.FindObjectsByType<BulletScript>(FindObjectsInactive.Exclude))
+            if (bullet.gameObject != bulletTemplate) fired = bullet;
+        Assert.That(fired, Is.Not.Null, "a projectile was fired");
+        Track(fired.gameObject);
+        Assert.That(fired.damage, Is.EqualTo(7), "damage from definition");
+        Assert.That(fired.source, Is.SameAs(tower.gameObject));
+    }
+
+    [Test]
     public void Tower_IgnoresNonEnemyColliders()
     {
         var tower = CannonTower();

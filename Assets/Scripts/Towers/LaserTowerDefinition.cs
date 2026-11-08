@@ -2,8 +2,10 @@ using UnityEngine;
 
 namespace TowerDefence
 {
+    // Three upgrade levels of a beam tower. purchaseCost/displayName come from TowerDefinition
+    // (same serialized field name as before, so existing assets keep their values).
     [CreateAssetMenu(fileName = "LaserTower", menuName = "Towers/Laser Tower")]
-    public class LaserTowerDefinition : ScriptableObject
+    public class LaserTowerDefinition : TowerDefinition
     {
         [System.Serializable]
         public class Level
@@ -15,7 +17,6 @@ namespace TowerDefence
             public Color beamColor = new Color(0.15f, 1, 0.85f);
         }
 
-        [Min(0)] public int purchaseCost = 6;
         public Level[] levels =
         {
             new Level { damagePerSecond = 2, range = 250, upgradeCost = 0 },
@@ -23,11 +24,16 @@ namespace TowerDefence
             new Level { damagePerSecond = 5, range = 350, upgradeCost = 9, beamWidth = 9 }
         };
 
-        public bool IsValid
+        public LaserTowerDefinition()
+        {
+            purchaseCost = 6; // Default for new assets; serialized values override it.
+        }
+
+        public override bool IsValid
         {
             get
             {
-                if (purchaseCost < 0 || levels == null || levels.Length != 3) return false;
+                if (!base.IsValid || levels == null || levels.Length != 3) return false;
                 foreach (var level in levels)
                 {
                     if (level == null || level.upgradeCost < 0 ||
@@ -36,11 +42,6 @@ namespace TowerDefence
                 }
                 return true;
             }
-        }
-
-        private static bool IsPositiveFinite(float value)
-        {
-            return value > 0 && !float.IsInfinity(value) && !float.IsNaN(value);
         }
     }
 }
