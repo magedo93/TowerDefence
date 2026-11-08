@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07a63e276a2ca894a9e8503723527b60, type: 3}
+  m_Name: LaserTower
+  m_EditorClassIdentifier: Assembly-CSharp::LaserTowerDefinition
+  purchaseCost: 6
+  levels:
+  - damagePerSecond: 2
+    range: 250
+    upgradeCost: 0
+    beamWidth: 5
+    beamColor: {r: 0.15, g: 1, b: 0.85, a: 1}
+  - damagePerSecond: 3.5
+    range: 300
+    upgradeCost: 6
+    beamWidth: 7
+    beamColor: {r: 0.15, g: 1, b: 0.85, a: 1}
+  - damagePerSecond: 5
+    range: 350
+    upgradeCost: 9
+    beamWidth: 9
+    beamColor: {r: 0.15, g: 1, b: 0.85, a: 1}

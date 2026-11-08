@@ -1,0 +1,56 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project
+
+2D tower defence originally written in Unity 2018 (a university course project), now being modernized for **Unity 6 (`6000.6.8f1`, see `ProjectSettings/ProjectVersion.txt`)**. Art is Kenney's CC0 tower-defense pack; sounds from Freesound. Target platform is Windows.
+
+`AGENTS.md` holds the binding project rules. The key ones:
+- Workflow: analyze → inspect affected scripts/assets → **propose and wait for approval** → implement → validate → give Unity Editor test steps.
+- Preserve asset GUIDs and `.meta` files. Never delete scenes, prefabs or assets without approval. Never edit `Library/`, `Temp/` or generated files.
+- Keep changes small. Avoid large rewrites and new third-party packages. Preserve the existing object-pooling behavior.
+- Do not claim Unity compilation succeeded unless it was verified. Report missing references and Inspector changes the user must make.
+
+## Commands
+
+All validation goes through `Tools/unity-check.ps1`. **Close the Unity Editor first**: the script refuses to run when the project is open and never removes lock files.
+
+```powershell
+# Check the installation, version and manifest only (does not launch Unity)
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1
+# Batch-mode import + compile (Editor compilation only, not a player build)
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mode Compile
+# Run Unity Test Framework tests
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mode PlayMode
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mode EditMode
+```
+
+- The script finds the Editor through `-EditorPath`, then `$env:UNITY_EDITOR_PATH`, then the default Unity Hub install path. The Editor version must exactly match `ProjectVersion.txt`.
+- Each run writes `automation.log`, `Unity.log` and `TestResults.xml` to `AutomationLogs/<timestamp>-<mode>-<id>/`. A run fails on compiler errors found in the log even if Unity exits with 0. It also fails when zero tests execute.
+- The script has no test filter. To run a single test, use the Unity Test Runner window. Alternatively, call Unity directly with `-runTests -testPlatform PlayMode -testFilter <FullTestName>`.
+- PlayMode tests are in `Assets/Tests/PlayMode/` (assembly `TowerDefence.Laser.PlayModeTests`). Gameplay scripts have no asmdef, so they compile into `Assembly-CSharp`.
+
+## Architecture
+
+**Scenes** (`Assets/Scenes`): `MainMenu`, then `Level01`–`Level03`. `Loading.StartGame(levelName)` loads a level by name. `GameManager.BackToMenu` loads `"MainMenu"` by name, so renaming a scene breaks these calls.
+
+**GameManager object (one per level scene).** Several scripts find it with `GameObject.Find("GameManager")`, so the object's name is load-bearing. It carries:
+- `GameManager`: win/lose state, the enemies-alive counter, and the tower type currently selected in the UI (`SetTowerToBuild`). The level is won when `enemiesAlive == 0` and `EnemyManager.WavesCompleted`.
+- `EnemyManager`: spawns waves through chained `Invoke` calls. Each enemy is assigned a path based on which marker component its prefab has: `Walker` → `soldierPaths`, `Vehicle` → `vehiclekPaths`, `Aircraft` → `planePaths`. Its trigger collider is the base: an enemy that enters it damages `PlayerHealth`.
+- `MoneyScript`: holds the budget (`TrySpend`, `AddBudget`) and spawns coins.
+
+**Waves** are `WaveProperties` ScriptableObjects in `Assets/Waves` (menu: Level/Wave). Each wave is a list of subwaves, and each subwave has an enemy prefab, a count and timings. They are assigned to `EnemyManager.waves` in each scene.
+
+**Enemies.** `EnemyScript` handles reward and death and requires `Health` and `DestroyScript`. Movement comes from a `WalkerScript` subclass (`TankScript`, `PlaneScript`) that follows a `PathCreator` path (`Assets/Plugins/Paths`). Spawning and despawning must keep `GameManager.AddEnemy`/`RemoveEnemy` balanced, or the level will never be won. `EnemyScript.Destroy(silent)` calls `RemoveEnemy`.
+
+**Pooling.** Use `ObjectPooler.InstantiatePooled(prefab, pos, rot[, Action<T> setup])` for enemies, towers, bullets and coins. It is a lazily created static singleton keyed by prefab. Pooled objects are "destroyed" with `SetActive(false)` and reused. Put reset logic in `OnEnable`/`OnDisable`, not `Start`/`Awake`. The setup callback runs after `SetActive(true)`, which means it runs after `OnEnable`.
+
+**Towers.**
+- `TowerScript` is the base class. It tracks targets from trigger enter/exit events and picks the enemy with the highest `WalkerScript.GetProgress()`. It rotates the child named `"Gun"` toward the target and fires pooled `BulletScript`/`RocketScript` projectiles.
+- `BuildSpotScript.OnBuildSpotClicked` places the tower selected in `GameManager` and pays its `BuildCost`. Clicking an occupied spot opens `LaserUpgradePanel` if the tower there is a laser.
+- **Laser tower** is the recent addition and the model for new configurable towers. It consists of `LaserTowerScript` plus a `LaserTowerDefinition` ScriptableObject (`Assets/Settings/Towers/LaserTower.asset`), which defines purchase cost and three levels of DPS, range and beam settings. Laser damage uses `Health.TakeAccumulatedDamage(float)`. Projectiles keep the integer `TakeDamage`.
+- The Editor menu **Tools > Tower Defence > Install Laser Tower** (`Assets/Editor/LaserTowerSetup.cs`) idempotently creates the laser assets and wires them into all three level scenes. If you change the laser cost, also update the button label in each scene.
+- `Tools/LaserTower.md` documents balance and validation. `Tools/LaserTowerArt.md` records how the icon was made.
+
+**Third-party / sample code.** `Assets/Standard Assets` and the TextMesh Pro examples are legacy imports. Do not modernize them unless asked. The game uses TMP for menu/win/lose text and legacy `UnityEngine.UI.Text` for the money HUD. Input is read through the legacy `Input` API (for example, `GameManager` checks Escape to return to the menu).
