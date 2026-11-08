@@ -12,7 +12,8 @@ namespace TowerDefence
 
         public float fireThreshold = 0.5f;
 
-        private void OnEnable()
+        // Once per instance; pooled tanks keep these across reuse.
+        private void Awake()
         {
             _health = gameObject.GetComponent<Health>();
             _fire = transform.Find("Fire").gameObject;

@@ -14,7 +14,8 @@ namespace TowerDefence
         public float oneFireThreshold = 0.66f;
         public float twoFireThreshold = 0.33f;
 
-        private void OnEnable()
+        // Once per instance; pooled planes keep these across reuse.
+        private void Awake()
         {
             _health = gameObject.GetComponent<Health>();
             _leftFire = transform.Find("LeftFire").gameObject;

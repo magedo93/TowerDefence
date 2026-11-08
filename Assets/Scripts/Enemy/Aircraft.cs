@@ -12,9 +12,9 @@ namespace TowerDefence
         public float corpusRotationSpeed;
         public float maxRotationDegrees;
 
-        protected override void OnEnable()
+        // Once per instance; pooled planes keep these across reuse.
+        private void Awake()
         {
-            base.OnEnable();
             _plane = transform.Find("Plane").gameObject;
             _shadow = transform.Find("Shadow").gameObject;
         }

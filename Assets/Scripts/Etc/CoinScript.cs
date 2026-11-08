@@ -20,18 +20,22 @@ namespace TowerDefence
 
         private float time;
 
-        private void OnEnable()
+        // Once per instance; pooled coins keep these across reuse.
+        private void Awake()
         {
             coin = transform.Find("Coin").gameObject;
             shadow = transform.Find("Shadow").gameObject;
+            spriteRendererCoin = coin.GetComponent<SpriteRenderer>();
+            spriteRendererShadow = shadow.GetComponent<SpriteRenderer>();
+        }
 
+        private void OnEnable()
+        {
             sinOffset = Random.Range(0, Mathf.PI * 2);
 
             if (duration == 0.0f) return;
             time = 0;
             Invoke(nameof(Destroy), duration);
-            spriteRendererCoin = coin.GetComponent<SpriteRenderer>();
-            spriteRendererShadow = shadow.GetComponent<SpriteRenderer>();
         }
 
         private void OnDisable()

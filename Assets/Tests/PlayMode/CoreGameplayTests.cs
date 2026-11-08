@@ -150,6 +150,25 @@ public class CoreGameplayTests
         return root;
     }
 
+    [UnityTest]
+    public IEnumerator Tower_ReusedAfterDestroy_StillAimsItsGun()
+    {
+        var tower = CannonTower();
+        tower.rotationSpeed = 1000f;
+        var gun = tower.transform.Find("Gun");
+
+        tower.Destroy();                 // pooled "destroy"
+        tower.gameObject.SetActive(true); // pooled reuse
+
+        var enemy = Walker(0.5f);
+        enemy.transform.position = tower.transform.position + new Vector3(100, 0, 0);
+        tower.OnTriggerEnter2D(enemy.GetComponent<Collider2D>());
+        var before = gun.rotation;
+        yield return null;
+        yield return null;
+        Assert.That(Quaternion.Angle(before, gun.rotation), Is.GreaterThan(1f), "gun should turn toward the target after reuse");
+    }
+
     [Test]
     public void Tower_IgnoresNonEnemyColliders()
     {

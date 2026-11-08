@@ -23,20 +23,25 @@ namespace TowerDefence
         private HashSet<GameObject> _currentTargets;
         private GameObject _gun;
 
+        // Child lookups happen once per instance; pooled towers keep them across reuse.
+        protected virtual void Awake()
+        {
+            var gun = transform.Find("Gun");
+            if (gun == null) Debug.LogError($"Tower '{name}' needs a child named \"Gun\".", this);
+            else _gun = gun.gameObject;
+            _aus = GetComponent<AudioSource>();
+        }
+
         protected virtual void OnEnable()
         {
             _currentCooldown = cooldown;
             _currentTargets = new HashSet<GameObject>();
-            _gun = transform.Find("Gun").gameObject;
-            Debug.Assert(_gun != null);
-            _aus = gameObject.GetComponent<AudioSource>();
         }
 
         public void Destroy()
         {
             _currentTargets = null;
-            _gun = null;
-            gameObject.SetActive(false); 
+            gameObject.SetActive(false);
         }
 
         protected Transform GunTransform { get { return _gun.transform; } }
