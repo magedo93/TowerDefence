@@ -2,48 +2,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VanishScript : MonoBehaviour {
+namespace TowerDefence
+{
+    public class VanishScript : MonoBehaviour {
 
-    public float duration;
+        public float duration;
 
-    private float time;
-    private SpriteRenderer spriteRenderer;
+        private float time;
+        private SpriteRenderer spriteRenderer;
 
-    private void OnEnable()
-    {
-        Begin();
-    }
+        private void OnEnable()
+        {
+            Begin();
+        }
 
-    public void Begin()
-    {
-        if (duration == 0.0f) return;
-        time = 0;
-        Invoke("Destroy", duration);
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-    }
+        public void Begin()
+        {
+            if (duration == 0.0f) return;
+            time = 0;
+            Invoke("Destroy", duration);
+            spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        }
 
-    void OnDisable()
-    {
-        CancelInvoke();
-    }
+        void OnDisable()
+        {
+            CancelInvoke();
+        }
 
-    public void Destroy()
-    {
-        gameObject.SetActive(false);
+        public void Destroy()
+        {
+            gameObject.SetActive(false);
 
-        var color = spriteRenderer.color;
-        color.a = 1;
-        spriteRenderer.color = color;
-    }
+            var color = spriteRenderer.color;
+            color.a = 1;
+            spriteRenderer.color = color;
+        }
 
-    void Update()
-    {
-        time += Time.deltaTime;
-        
-        var opacity = Mathf.Cos(Mathf.PI / 2.0f * time / duration);
-        
-        var color = spriteRenderer.color;
-        color.a = opacity;
-        spriteRenderer.color = color;
+        void Update()
+        {
+            time += Time.deltaTime;
+
+            var opacity = Mathf.Cos(Mathf.PI / 2.0f * time / duration);
+
+            var color = spriteRenderer.color;
+            color.a = opacity;
+            spriteRenderer.color = color;
+        }
     }
 }

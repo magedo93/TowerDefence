@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainMenu : MonoBehaviour
+namespace TowerDefence
 {
-    public void Quit()
+    public class MainMenu : MonoBehaviour
     {
-        Application.Quit();
+        public void Quit()
+        {
+            Application.Quit();
+        }
     }
 }

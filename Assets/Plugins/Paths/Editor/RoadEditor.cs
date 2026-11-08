@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(RoadCreator))]
-public class RoadEditor : Editor {
+namespace TowerDefence.Paths
+{
+    [CustomEditor(typeof(RoadCreator))]
+    public class RoadEditor : Editor {
 
-    RoadCreator creator;
+        RoadCreator creator;
 
-    void OnSceneGUI()
-    {
-        if (creator.autoUpdate && Event.current.type == EventType.Repaint)
+        void OnSceneGUI()
         {
-            creator.UpdateRoad();
+            if (creator.autoUpdate && Event.current.type == EventType.Repaint)
+            {
+                creator.UpdateRoad();
+            }
         }
-    }
 
-    void OnEnable()
-    {
-        creator = (RoadCreator)target;
+        void OnEnable()
+        {
+            creator = (RoadCreator)target;
+        }
     }
 }

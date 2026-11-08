@@ -5179,7 +5179,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 68234140}
-        m_TargetAssemblyTypeName: GameManager, TowerDefence.Runtime
+        m_TargetAssemblyTypeName: TowerDefence.GameManager, TowerDefence.Runtime
         m_MethodName: SetTowerToBuild
         m_Mode: 2
         m_Arguments:

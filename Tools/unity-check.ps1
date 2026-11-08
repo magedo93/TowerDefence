@@ -242,9 +242,9 @@ try {
             $unityArguments += @('-nographics', '-quit')
         }
         elseif ($Mode -eq 'Build') {
-            # Windows 64-bit player of the enabled Build Settings scenes (Assets/Editor/BuildScript.cs).
+            # Windows 64-bit player of the enabled Build Settings scenes (TowerDefence.EditorTools.BuildScript, Assets/Editor/BuildScript.cs).
             $buildOutput = Join-Path $projectRoot 'Builds/Windows/TowerDefense.exe'
-            $unityArguments += @('-quit', '-buildTarget', 'Win64', '-executeMethod', 'BuildScript.BuildWindows', '-buildOutput', $buildOutput)
+            $unityArguments += @('-quit', '-buildTarget', 'Win64', '-executeMethod', 'TowerDefence.EditorTools.BuildScript.BuildWindows', '-buildOutput', $buildOutput)
         }
         else {
             # The test runner owns shutdown. Keep graphics available for Play Mode.

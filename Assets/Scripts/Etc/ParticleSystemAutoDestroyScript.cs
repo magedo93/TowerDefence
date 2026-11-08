@@ -1,24 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ParticleSystemAutoDestroyScript : MonoBehaviour
+namespace TowerDefence
 {
-    private ParticleSystem ps;
-    private AudioSource aus;
-
-    void OnEnable()
+    public class ParticleSystemAutoDestroyScript : MonoBehaviour
     {
-        ps = gameObject.GetComponent<ParticleSystem>();
-        ps.Play();
-        aus = gameObject.GetComponent<AudioSource>();
-    }
+        private ParticleSystem ps;
+        private AudioSource aus;
 
-    public void Update()
-    {
-        if (ps)
+        void OnEnable()
         {
-            if (ps.IsAlive() || (aus != null && aus.isPlaying)) return;
-            gameObject.SetActive(false);
+            ps = gameObject.GetComponent<ParticleSystem>();
+            ps.Play();
+            aus = gameObject.GetComponent<AudioSource>();
+        }
+
+        public void Update()
+        {
+            if (ps)
+            {
+                if (ps.IsAlive() || (aus != null && aus.isPlaying)) return;
+                gameObject.SetActive(false);
+            }
         }
     }
 }

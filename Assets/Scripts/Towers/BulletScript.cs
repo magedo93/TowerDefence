@@ -2,25 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(VanishScript))]
-public class BulletScript : MonoBehaviour
+namespace TowerDefence
 {
-    public int damage;
-    public float speed;
-    public float lifeTime;
-
-    [HideInInspector]
-    public GameObject target;
-    [HideInInspector]
-    public GameObject source;
-
-    public void Destroy()
+    [RequireComponent(typeof(VanishScript))]
+    public class BulletScript : MonoBehaviour
     {
-        gameObject.SetActive(false);
-    }
-    
-    protected virtual void Update()
-    {
-        transform.Translate(0, speed * Time.deltaTime, 0);
+        public int damage;
+        public float speed;
+        public float lifeTime;
+
+        [HideInInspector]
+        public GameObject target;
+        [HideInInspector]
+        public GameObject source;
+
+        public void Destroy()
+        {
+            gameObject.SetActive(false);
+        }
+
+        protected virtual void Update()
+        {
+            transform.Translate(0, speed * Time.deltaTime, 0);
+        }
     }
 }

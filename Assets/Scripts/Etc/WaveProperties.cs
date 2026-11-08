@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 
-[CreateAssetMenu(fileName = "Wave.asset", menuName = "Level/Wave")]
-public class WaveProperties : ScriptableObject
+namespace TowerDefence
 {
-    [System.Serializable]
-    public class Subwave
+    [CreateAssetMenu(fileName = "Wave.asset", menuName = "Level/Wave")]
+    public class WaveProperties : ScriptableObject
     {
-        public int size;
-        public GameObject Enemy;
-        public float enemyTime;
-        public float subwaveTime;
+        [System.Serializable]
+        public class Subwave
+        {
+            public int size;
+            public GameObject Enemy;
+            public float enemyTime;
+            public float subwaveTime;
+        }
+
+        public Subwave[] subwave;
+        public float waveTime;
     }
-  
-    public Subwave[] subwave;
-    public float waveTime;
 }

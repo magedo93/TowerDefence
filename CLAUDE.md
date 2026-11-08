@@ -29,7 +29,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mod
 ```
 
 - `-Mode Build` runs `BuildScript.BuildWindows` (`Assets/Editor/BuildScript.cs`, also under **Tools > Tower Defence > Build Windows Player**). It is the only check that catches Editor-only code (`using UnityEditor;` without `#if UNITY_EDITOR`) in runtime scripts, so run it after touching runtime code.
-- The game defines a global `Path` class (`Assets/Plugins/Paths`), which hides `System.IO.Path`. Write `System.IO.Path` explicitly.
+- **Namespaces:** game code is in `TowerDefence`, the path plugin in `TowerDefence.Paths` (its `Path` class no longer clashes with `System.IO.Path`), Editor tools in `TowerDefence.EditorTools` (not `.Editor`, which would hide `UnityEditor.Editor`). `PrefabBrush` keeps its original `UnityEditor` namespace. Batch `-executeMethod` calls need the full name, e.g. `TowerDefence.EditorTools.BuildScript.BuildWindows`.
 
 - The script finds the Editor through `-EditorPath`, then `$env:UNITY_EDITOR_PATH`, then the default Unity Hub install path. The Editor version must exactly match `ProjectVersion.txt`.
 - Each run writes `automation.log`, `Unity.log` and `TestResults.xml` to `AutomationLogs/<timestamp>-<mode>-<id>/`. A run fails on compiler errors found in the log even if Unity exits with 0. It also fails when zero tests execute.

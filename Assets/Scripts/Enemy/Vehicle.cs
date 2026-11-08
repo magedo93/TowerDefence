@@ -2,4 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Vehicle : WalkerScript {}
+namespace TowerDefence
+{
+    public class Vehicle : WalkerScript {}
+}
