@@ -29,6 +29,16 @@ namespace TowerDefence
             purchaseCost = 6; // Default for new assets; serialized values override it.
         }
 
+        public override int LevelCount { get { return levels != null ? levels.Length : 0; } }
+
+        public override int UpgradeCost(int level) { return level <= 1 ? 0 : levels[level - 1].upgradeCost; }
+
+        public override string DescribeLevel(int level)
+        {
+            var stats = levels[Mathf.Clamp(level - 1, 0, levels.Length - 1)];
+            return $"Damage: {stats.damagePerSecond:0.#}/sec   Range: {stats.range:0}";
+        }
+
         public override bool IsValid
         {
             get

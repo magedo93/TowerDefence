@@ -20,3 +20,12 @@ MonoBehaviour:
   damage: 1
   projectilePrefab: {fileID: 1651696609876658, guid: 7f825a5f3980c8c468334beaf180b929, type: 3}
   fireSound: {fileID: 8300000, guid: 3ad1a18ee1b07094dbf8b8f1729fd79b, type: 3}
+  upgrades:
+  - upgradeCost: 9
+    range: 600
+    cooldown: 3
+    damage: 1
+  - upgradeCost: 14
+    range: 700
+    cooldown: 4
+    damage: 2

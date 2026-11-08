@@ -263,7 +263,7 @@ namespace TowerDefence.EditorTools
                 root.anchorMin = root.anchorMax = new Vector2(1, 0);
                 var image = root.gameObject.AddComponent<Image>();
                 image.color = new Color(0.035f, 0.09f, 0.12f, 0.97f);
-                var controller = root.gameObject.AddComponent<LaserUpgradePanel>();
+                var controller = root.gameObject.AddComponent<TowerUpgradePanel>();
                 controller.title = Label("Title", root, new Vector2(400, 38), new Vector2(-15, 80), "LASER TOWER", 25);
                 controller.title.color = new Color(0.25f, 1, 0.85f);
                 controller.statsText = Label("Stats", root, new Vector2(440, 70), new Vector2(0, 15), "", 21);
@@ -288,12 +288,12 @@ namespace TowerDefence.EditorTools
                 button != null && Enumerable.Range(0, button.onClick.GetPersistentEventCount())
                     .Any(i => button.onClick.GetPersistentMethodName(i) == "SetTowerToBuild"));
             if (selectionButton == null) throw new InvalidOperationException(sceneName + " has no tower selector.");
-            var panel = all.Select(t => t.GetComponent<LaserUpgradePanel>()).FirstOrDefault(c => c != null);
+            var panel = all.Select(t => t.GetComponent<TowerUpgradePanel>()).FirstOrDefault(c => c != null);
             if (panel == null)
             {
                 var canvas = selectionButton.GetComponentInParent<Canvas>().rootCanvas;
                 var panelObject = (GameObject)PrefabUtility.InstantiatePrefab(panelPrefab, canvas.transform);
-                panel = panelObject.GetComponent<LaserUpgradePanel>();
+                panel = panelObject.GetComponent<TowerUpgradePanel>();
             }
             panel.gameObject.SetActive(false);
             if (!all.Any(t => t.name == "LaserTowerButton"))
@@ -307,7 +307,7 @@ namespace TowerDefence.EditorTools
             }
             foreach (var spot in all.Select(t => t.GetComponent<BuildSpotScript>()).Where(c => c != null))
             {
-                spot.laserUpgradePanel = panel;
+                spot.upgradePanel = panel;
                 PrefabUtility.RecordPrefabInstancePropertyModifications(spot);
                 EditorUtility.SetDirty(spot);
             }

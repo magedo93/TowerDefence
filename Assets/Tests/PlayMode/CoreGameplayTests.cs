@@ -169,45 +169,122 @@ public class CoreGameplayTests
         Assert.That(Quaternion.Angle(before, gun.rotation), Is.GreaterThan(1f), "gun should turn toward the target after reuse");
     }
 
-    [Test]
-    public void ProjectileTower_TakesRangeCooldownAndDamageFromItsDefinition()
+    // A projectile tower driven by a fresh definition: level 1 = range 123, cooldown 0.25s,
+    // damage 7, price 4; one upgrade (cost 2) to range 200, cooldown 0.1s, damage 9.
+    private TowerScript DefinedProjectileTower(out GameObject bulletTemplate)
     {
         // Projectile template under an inactive parent, like a prefab asset.
         var holder = Inactive("Templates");
-        var bulletTemplate = new GameObject("TestProjectile");
+        bulletTemplate = new GameObject("TestProjectile");
         bulletTemplate.transform.SetParent(holder.transform, false);
         bulletTemplate.AddComponent<BulletScript>().damage = 1;
 
         var definition = ScriptableObject.CreateInstance<ProjectileTowerDefinition>();
         _created.Add(definition);
+        definition.displayName = "Test Cannon";
         definition.purchaseCost = 4;
         definition.range = 123f;
         definition.cooldown = 0.25f;
         definition.damage = 7;
         definition.projectilePrefab = bulletTemplate;
+        definition.upgrades = new[]
+        {
+            new ProjectileTowerDefinition.Upgrade { upgradeCost = 2, range = 200f, cooldown = 0.1f, damage = 9 }
+        };
 
         var root = Inactive("TestTower");
         new GameObject("Gun").transform.SetParent(root.transform, false);
-        var range = root.AddComponent<CircleCollider2D>();
-        range.radius = 999f;
+        root.AddComponent<CircleCollider2D>().radius = 999f;
         var tower = root.AddComponent<TowerScript>();
-        tower.cost = 99;
+        tower.cost = 99;      // legacy values must be ignored
         tower.cooldown = 99f;
         tower.definition = definition;
         root.SetActive(true);
+        return tower;
+    }
+
+    private readonly HashSet<BulletScript> _seenProjectiles = new HashSet<BulletScript>();
+
+    private BulletScript Fire(TowerScript tower, GameObject template)
+    {
+        tower.Shoot(Track(new GameObject("Target")));
+        foreach (var bullet in Object.FindObjectsByType<BulletScript>(FindObjectsInactive.Exclude))
+        {
+            if (bullet.gameObject == template || !_seenProjectiles.Add(bullet)) continue;
+            Track(bullet.gameObject);
+            return bullet;
+        }
+        return null;
+    }
+
+    private MoneyScript Wallet(int coins)
+    {
+        var display = Track(new GameObject("TestMoneyDisplay", typeof(RectTransform), typeof(Text)));
+        var go = Inactive("TestWallet");
+        var money = go.AddComponent<MoneyScript>();
+        money.moneyText = display.GetComponent<Text>();
+        money.startingWealth = coins;
+        go.SetActive(true);
+        return money;
+    }
+
+    [Test]
+    public void ProjectileTower_TakesRangeCooldownAndDamageFromItsDefinition()
+    {
+        var tower = DefinedProjectileTower(out var template);
 
         Assert.That(tower.BuildCost, Is.EqualTo(4), "cost from definition");
         Assert.That(tower.Cooldown, Is.EqualTo(0.25f), "cooldown from definition");
-        Assert.That(range.radius, Is.EqualTo(123f), "range applied to the collider");
+        Assert.That(tower.GetComponent<CircleCollider2D>().radius, Is.EqualTo(123f), "range applied to the collider");
+        Assert.That(tower.DisplayName, Is.EqualTo("Test Cannon"));
 
-        tower.Shoot(Track(new GameObject("Target")));
-        BulletScript fired = null;
-        foreach (var bullet in Object.FindObjectsByType<BulletScript>(FindObjectsInactive.Exclude))
-            if (bullet.gameObject != bulletTemplate) fired = bullet;
+        var fired = Fire(tower, template);
         Assert.That(fired, Is.Not.Null, "a projectile was fired");
-        Track(fired.gameObject);
         Assert.That(fired.damage, Is.EqualTo(7), "damage from definition");
         Assert.That(fired.source, Is.SameAs(tower.gameObject));
+    }
+
+    [Test]
+    public void ProjectileTower_UpgradeAppliesNextLevel_StopsAtMax_ResetsOnReuse()
+    {
+        var tower = DefinedProjectileTower(out var template);
+        var money = Wallet(10);
+        var range = tower.GetComponent<CircleCollider2D>();
+        int levelChanges = 0;
+        tower.LevelChanged += () => levelChanges++;
+
+        Assert.That(tower.MaxLevel, Is.EqualTo(2));
+        Assert.That(tower.CanUpgrade, Is.True);
+        Assert.That(tower.NextUpgradeCost, Is.EqualTo(2));
+
+        Assert.That(tower.TryUpgrade(money), Is.True);
+        Assert.That(tower.CurrentLevel, Is.EqualTo(2));
+        Assert.That(money.GetWealth(), Is.EqualTo(8), "charged once");
+        Assert.That(levelChanges, Is.EqualTo(1));
+        Assert.That(range.radius, Is.EqualTo(200f), "upgraded range");
+        Assert.That(tower.Cooldown, Is.EqualTo(0.1f), "upgraded cooldown");
+        Assert.That(Fire(tower, template).damage, Is.EqualTo(9), "upgraded damage");
+
+        Assert.That(tower.CanUpgrade, Is.False, "max level");
+        Assert.That(tower.TryUpgrade(money), Is.False);
+        Assert.That(money.GetWealth(), Is.EqualTo(8), "no charge at max level");
+
+        // Pooled reuse starts again at level 1.
+        tower.gameObject.SetActive(false);
+        tower.gameObject.SetActive(true);
+        Assert.That(tower.CurrentLevel, Is.EqualTo(1));
+        Assert.That(range.radius, Is.EqualTo(123f));
+        Assert.That(tower.Cooldown, Is.EqualTo(0.25f));
+    }
+
+    [Test]
+    public void ProjectileTower_UpgradeNeedsEnoughCoins()
+    {
+        var tower = DefinedProjectileTower(out _);
+        var money = Wallet(1);
+        Assert.That(tower.TryUpgrade(money), Is.False);
+        Assert.That(tower.CurrentLevel, Is.EqualTo(1));
+        Assert.That(money.GetWealth(), Is.EqualTo(1));
     }
 
     [Test]

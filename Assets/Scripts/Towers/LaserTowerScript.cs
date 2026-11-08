@@ -12,32 +12,32 @@ namespace TowerDefence
         // The inherited TowerScript.definition must be a LaserTowerDefinition.
         public LaserTowerDefinition LaserDefinition { get { return definition as LaserTowerDefinition; } }
 
-        public int CurrentLevel { get; private set; } = 1;
-        public bool CanUpgrade { get { return LaserDefinition != null && LaserDefinition.IsValid && CurrentLevel < 3; } }
+        // Level, upgrades and LevelChanged come from TowerScript.
         public LaserTowerDefinition.Level Stats { get { return LaserDefinition.levels[CurrentLevel - 1]; } }
-        public event System.Action LevelChanged;
 
         private readonly List<Collider2D> _overlaps = new List<Collider2D>(64);
         private LineRenderer _beam;
         private CircleCollider2D _rangeCollider;
-        private bool _upgrading;
+
+        private bool HasValidDefinition { get { return LaserDefinition != null && LaserDefinition.IsValid; } }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _beam = GetComponent<LineRenderer>();
+            _rangeCollider = GetComponent<CircleCollider2D>();
+        }
 
         protected override void OnEnable()
         {
-            base.OnEnable();
-            _beam = GetComponent<LineRenderer>();
-            _rangeCollider = GetComponent<CircleCollider2D>();
-            CurrentLevel = 1;
-            _upgrading = false;
+            base.OnEnable(); // resets to level 1 and applies it
             _overlaps.Clear();
             _beam.enabled = false;
-            if (LaserDefinition == null || !LaserDefinition.IsValid)
+            if (!HasValidDefinition)
             {
                 Debug.LogError("Laser Tower requires a valid three-level definition.", this);
                 enabled = false;
-                return;
             }
-            ApplyLevel();
         }
 
         protected override void OnDisable()
@@ -96,23 +96,9 @@ namespace TowerDefence
         // The laser never spawns bullets, including calls through the public base API.
         public override void Shoot(GameObject target) { }
 
-        public bool TryUpgrade(MoneyScript money)
+        protected override void ApplyLevel()
         {
-            if (_upgrading || !isActiveAndEnabled || money == null || !CanUpgrade) return false;
-            _upgrading = true;
-            try
-            {
-                if (!money.TrySpend(LaserDefinition.levels[CurrentLevel].upgradeCost)) return false;
-                CurrentLevel++;
-                ApplyLevel();
-                LevelChanged?.Invoke();
-                return true;
-            }
-            finally { _upgrading = false; }
-        }
-
-        private void ApplyLevel()
-        {
+            if (!HasValidDefinition) return;
             _rangeCollider.radius = Stats.range;
             _beam.positionCount = 2;
             _beam.useWorldSpace = true;

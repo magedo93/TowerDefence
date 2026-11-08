@@ -22,9 +22,9 @@ public class SceneIntegrityTests
         { "EnemyManager", new[] { "playerHealth", "manager", "waves", "soldierPaths", "vehiclePaths|vehiclekPaths", "planePaths" } },
         { "MoneyScript", new[] { "moneyText", "goldPrefab", "silverPrefab", "cooperPrefab", "coinAudio" } },
         { "PlayerHealth", new[] { "healthText", "damageImage" } },
-        { "BuildSpotScript", new[] { "manager", "money", "laserUpgradePanel" } },
+        { "BuildSpotScript", new[] { "manager", "money", "upgradePanel|laserUpgradePanel" } },
         { "LaserTowerScript", new[] { "definition" } },
-        { "LaserUpgradePanel", new[] { "title", "statsText", "upgradeText", "upgradeButton" } },
+        { "TowerUpgradePanel", new[] { "title", "statsText", "upgradeText", "upgradeButton" } },
         { "Loading", new[] { "text" } },
     };
 

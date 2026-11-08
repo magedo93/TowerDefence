@@ -234,6 +234,7 @@ public class LaserTowerTests
             var manager = managers[0];
             var money = manager.GetComponent<MoneyScript>();
             int selectors = 0;
+            var projectileTowers = new Dictionary<string, GameObject>();
             foreach (var button in Object.FindObjectsByType<Button>())
             {
                 bool selectsTower = false;
@@ -245,6 +246,7 @@ public class LaserTowerTests
                 var prefab = manager.GetTowerToBuild();
                 var tower = prefab.GetComponent<TowerScript>();
                 Assert.That(tower, Is.Not.Null);
+                if (!(tower is LaserTowerScript)) projectileTowers[prefab.name] = prefab;
                 if (prefab.name == "BulletTower")
                 {
                     Assert.That(tower.BuildCost, Is.EqualTo(3));
@@ -269,8 +271,9 @@ public class LaserTowerTests
             Assert.That(laser, Is.Not.Null);
             money.AddBudget(30);
             spot.OnBuildSpotClicked();
-            var panel = spot.laserUpgradePanel;
+            var panel = spot.upgradePanel;
             Assert.That(panel.gameObject.activeInHierarchy, Is.True, sceneName);
+            Assert.That(panel.title.text, Is.EqualTo("LASER TOWER  -  LEVEL 1"), sceneName);
             int upgradeBudget = money.GetWealth();
             panel.Upgrade();
             panel.Upgrade();
@@ -279,6 +282,38 @@ public class LaserTowerTests
             Assert.That(panel.upgradeButton.interactable, Is.False, sceneName);
             panel.Close();
             Assert.That(panel.gameObject.activeSelf, Is.False, sceneName);
+
+            // Every other tower type upgrades through the same panel.
+            Assert.That(projectileTowers.Keys, Is.EquivalentTo(new[] { "BulletTower", "RocketTower" }), sceneName);
+            Assert.That(spots.Length, Is.GreaterThanOrEqualTo(3), sceneName);
+            var expected = new Dictionary<string, (string title, int upgrades)>
+            {
+                { "BulletTower", ("BULLET TOWER", 3 + 5) },
+                { "RocketTower", ("ROCKET TOWER", 9 + 14) },
+            };
+            int spotIndex = 1;
+            foreach (var entry in expected)
+            {
+                var projectileSpot = spots[spotIndex++];
+                money.AddBudget(50);
+                manager.SetTowerToBuild(projectileTowers[entry.Key]);
+                projectileSpot.OnBuildSpotClicked();                 // build
+                var built = projectileSpot.BuiltTower.GetComponent<TowerScript>();
+                Assert.That(built.CurrentLevel, Is.EqualTo(1), $"{sceneName} {entry.Key}");
+                projectileSpot.OnBuildSpotClicked();                 // open its upgrade panel
+                Assert.That(projectileSpot.upgradePanel.Tower, Is.SameAs(built), $"{sceneName} {entry.Key}");
+                Assert.That(panel.title.text, Is.EqualTo(entry.Value.title + "  -  LEVEL 1"), $"{sceneName} {entry.Key}");
+                Assert.That(panel.upgradeButton.interactable, Is.True, $"{sceneName} {entry.Key}");
+                int beforeUpgrades = money.GetWealth();
+                panel.Upgrade();
+                panel.Upgrade();
+                Assert.That(built.CurrentLevel, Is.EqualTo(3), $"{sceneName} {entry.Key}");
+                Assert.That(money.GetWealth(), Is.EqualTo(beforeUpgrades - entry.Value.upgrades), $"{sceneName} {entry.Key} cost");
+                Assert.That(panel.title.text, Is.EqualTo(entry.Value.title + "  -  LEVEL 3"), $"{sceneName} {entry.Key}");
+                Assert.That(panel.upgradeText.text, Is.EqualTo("MAX LEVEL"), $"{sceneName} {entry.Key}");
+                Assert.That(panel.upgradeButton.interactable, Is.False, $"{sceneName} {entry.Key}");
+                panel.Close();
+            }
         }
         var lastLevel = SceneManager.GetActiveScene();
         var empty = SceneManager.CreateScene("LaserTestCleanup");

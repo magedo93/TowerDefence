@@ -4,17 +4,24 @@ using UnityEngine.UI;
 
 namespace TowerDefence
 {
-    public class LaserUpgradePanel : MonoBehaviour
+    // Upgrade panel for any built tower: opened by clicking the tower's build spot.
+    // Shows the tower's name, level, current stats and the next level's stats, and buys
+    // the next level. Text comes from the tower's definition (TowerDefinition.DescribeLevel),
+    // so new tower types need no panel code.
+    // (Formerly LaserUpgradePanel; same script GUID, so existing panels keep working.)
+    public class TowerUpgradePanel : MonoBehaviour
     {
         public TextMeshProUGUI title;
         public TextMeshProUGUI statsText;
         public TextMeshProUGUI upgradeText;
         public Button upgradeButton;
 
-        private LaserTowerScript _tower;
+        private TowerScript _tower;
         private MoneyScript _money;
 
-        public void Show(LaserTowerScript tower, MoneyScript money)
+        public TowerScript Tower { get { return _tower; } }
+
+        public void Show(TowerScript tower, MoneyScript money)
         {
             Unsubscribe();
             _tower = tower;
@@ -53,19 +60,20 @@ namespace TowerDefence
         private void Refresh()
         {
             if (_tower == null || _money == null) return;
-            var stats = _tower.Stats;
-            title.text = "LASER TOWER  -  LEVEL " + _tower.CurrentLevel;
-            statsText.text = $"Damage: {stats.damagePerSecond:0.#}/sec   Range: {stats.range:0}";
+            var definition = _tower.definition;
+            int level = _tower.CurrentLevel;
+            title.text = $"{_tower.DisplayName.ToUpperInvariant()}  -  LEVEL {level}";
+            statsText.text = definition != null ? definition.DescribeLevel(level) : string.Empty;
             if (!_tower.CanUpgrade)
             {
                 upgradeText.text = "MAX LEVEL";
                 upgradeButton.interactable = false;
                 return;
             }
-            var next = _tower.LaserDefinition.levels[_tower.CurrentLevel];
-            statsText.text += $"\nNext: {next.damagePerSecond:0.#}/sec   Range: {next.range:0}";
-            upgradeText.text = $"UPGRADE  -  {next.upgradeCost} COINS";
-            upgradeButton.interactable = _money.GetWealth() >= next.upgradeCost;
+            int cost = _tower.NextUpgradeCost;
+            statsText.text += "\nNext: " + definition.DescribeLevel(level + 1);
+            upgradeText.text = $"UPGRADE  -  {cost} COINS";
+            upgradeButton.interactable = _money.GetWealth() >= cost;
         }
     }
 }

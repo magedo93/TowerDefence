@@ -1,14 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace TowerDefence
 {
+    // A place where the player can build. Clicking an empty spot builds the tower selected
+    // in GameManager (if affordable); clicking an occupied spot opens its upgrade panel.
     public class BuildSpotScript : MonoBehaviour
     {
         public GameManager manager;
         public MoneyScript money;
-        public LaserUpgradePanel laserUpgradePanel;
+        [FormerlySerializedAs("laserUpgradePanel")]
+        public TowerUpgradePanel upgradePanel;
 
         private GameObject _build;
 
@@ -22,19 +24,10 @@ namespace TowerDefence
 
         public void OnBuildSpotClicked()
         {
-            /*if (build != null)
-            {
-                var tower = build.GetComponent<TowerScript>();
-                var cost = tower.cost;
-                tower.Destroy();
-                build = null;
-                money.AddBudget(cost / 2);
-            }*/
-
             if (_build != null)
             {
-                var laser = _build.GetComponent<LaserTowerScript>();
-                if (laser != null && laserUpgradePanel != null) laserUpgradePanel.Show(laser, money);
+                var tower = _build.GetComponent<TowerScript>();
+                if (tower != null && upgradePanel != null) upgradePanel.Show(tower, money);
                 return;
             }
 
