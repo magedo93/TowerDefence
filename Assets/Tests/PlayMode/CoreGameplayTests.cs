@@ -121,7 +121,7 @@ public class CoreGameplayTests
 
     private GameObject SpawnedCoin(GameObject template, GameObject exclude = null)
     {
-        foreach (var coin in UnityEngine.Object.FindObjectsByType(RuntimeType("CoinScript"), FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        foreach (var coin in UnityEngine.Object.FindObjectsByType(RuntimeType("CoinScript"), FindObjectsInactive.Exclude))
         {
             var go = ((Component)coin).gameObject;
             if (go != template && go != exclude) return go;

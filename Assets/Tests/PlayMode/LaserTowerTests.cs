@@ -257,11 +257,11 @@ public class LaserTowerTests
         {
             yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             yield return null;
-            var managers = UnityEngine.Object.FindObjectsByType(RuntimeType("GameManager"), FindObjectsSortMode.None);
+            var managers = UnityEngine.Object.FindObjectsByType(RuntimeType("GameManager"));
             Assert.That(managers.Length, Is.EqualTo(1), sceneName);
             var manager = (Component)managers[0];
             var money = manager.GetComponent(RuntimeType("MoneyScript"));
-            var buttons = UnityEngine.Object.FindObjectsByType<Button>(FindObjectsSortMode.None);
+            var buttons = UnityEngine.Object.FindObjectsByType<Button>();
             int selectors = 0;
             foreach (var button in buttons)
             {
@@ -289,7 +289,7 @@ public class LaserTowerTests
             GameObject.Find("LaserTowerButton").GetComponent<Button>().onClick.Invoke();
             var selected = (GameObject)Call(manager, "GetTowerToBuild");
             Assert.That(selected.GetComponent(RuntimeType("LaserTowerScript")), Is.Not.Null);
-            var spots = UnityEngine.Object.FindObjectsByType(RuntimeType("BuildSpotScript"), FindObjectsSortMode.None);
+            var spots = UnityEngine.Object.FindObjectsByType(RuntimeType("BuildSpotScript"));
             Assert.That(spots.Length, Is.GreaterThan(0));
             var spot = (Component)spots[0];
             int before = (int)Call(money, "GetWealth");

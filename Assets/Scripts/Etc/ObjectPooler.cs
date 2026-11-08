@@ -16,6 +16,14 @@ public class ObjectPooler : MonoBehaviour {
         }
     }
 
+    // Statics survive entering Play Mode when domain reload is disabled
+    // (Project Settings > Editor > Enter Play Mode Settings). Reset explicitly.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static private void ResetStatics()
+    {
+        _singleton = null;
+    }
+
     static private void Instantiate()
     {
         new GameObject("#ObjectPooler", typeof(ObjectPooler));

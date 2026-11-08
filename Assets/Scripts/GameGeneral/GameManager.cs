@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(MoneyScript))]
@@ -53,7 +54,9 @@ public class GameManager : MonoBehaviour {
     public void Update()
     {
         if (enemiesAlive == 0 && enemyManager.WavesCompleted) GameWin();
-        if (Input.GetKeyDown(KeyCode.Escape))
+        // New Input System; the legacy Input Manager is disabled in this project.
+        var keyboard = Keyboard.current;
+        if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame)
         {
             BackToMenu();
         }
