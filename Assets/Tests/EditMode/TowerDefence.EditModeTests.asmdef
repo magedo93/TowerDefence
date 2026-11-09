@@ -1,6 +1,7 @@
 {
   "name": "TowerDefence.EditModeTests",
   "references": [
+    "Unity.TextMeshPro",
     "TowerDefence.Runtime",
     "Unity.RenderPipelines.Core.Runtime",
     "Unity.RenderPipelines.Universal.Runtime",

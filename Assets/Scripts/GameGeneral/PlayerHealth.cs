@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 
 namespace TowerDefence
@@ -7,7 +8,7 @@ namespace TowerDefence
     [RequireComponent(typeof(GameManager))]
     public class PlayerHealth : Health
     {
-        public Text healthText;
+        public TMP_Text healthText;
         public Image damageImage;
         public float damageImageOpacity;
         public float flashSpeed; 

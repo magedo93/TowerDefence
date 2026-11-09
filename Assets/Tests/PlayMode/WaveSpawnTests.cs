@@ -123,8 +123,8 @@ public class WaveSpawnTests
         level.Game.loosingMsg = Ui<TextMeshProUGUI>("Lose").GetComponent<TextMeshProUGUI>();
         level.Game.MenuReturnTime = 1000f; // Never leave the test scene.
         level.Game.enemyManager = level.Enemies;
-        money.moneyText = Ui<Text>("Money").GetComponent<Text>();
-        level.Player.healthText = Ui<Text>("Health").GetComponent<Text>();
+        money.moneyText = Ui<TextMeshProUGUI>("Money").GetComponent<TextMeshProUGUI>();
+        level.Player.healthText = Ui<TextMeshProUGUI>("Health").GetComponent<TextMeshProUGUI>();
         level.Player.damageImage = Ui<Image>("Damage").GetComponent<Image>();
         level.Player.startingHealth = 10;
 

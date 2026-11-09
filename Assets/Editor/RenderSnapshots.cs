@@ -25,14 +25,18 @@ namespace TowerDefence.EditorTools
         [MenuItem("Tools/Tower Defence/Render Snapshots")]
         public static void CaptureMenu() { Capture("AutomationLogs/Snapshots/manual"); }
 
-        public static void CaptureFromCommandLine() { Capture(Arg("-snapshotDir") ?? "AutomationLogs/Snapshots/latest"); }
+        // -withUI also writes "<scene>-UI.png" with the scene's overlay canvases (menu, HUD) drawn.
+        public static void CaptureFromCommandLine()
+        {
+            Capture(Arg("-snapshotDir") ?? "AutomationLogs/Snapshots/latest", Environment.GetCommandLineArgs().Contains("-withUI"));
+        }
 
         public static void CompareFromCommandLine()
         {
             Compare(Arg("-baseline"), Arg("-current"), Arg("-diffDir") ?? "AutomationLogs/Snapshots/diff");
         }
 
-        public static void Capture(string outDir)
+        public static void Capture(string outDir, bool withUI = false)
         {
             Directory.CreateDirectory(outDir);
             var pipeline = GraphicsSettings.currentRenderPipeline;
@@ -45,6 +49,7 @@ namespace TowerDefence.EditorTools
                     .OrderByDescending(c => c.CompareTag("MainCamera")).FirstOrDefault();
                 if (camera == null) { Debug.LogWarning($"[RenderSnapshots] {scene.name}: no camera"); continue; }
                 Save(camera, System.IO.Path.Combine(outDir, scene.name + ".png"));
+                if (withUI) SaveWithUI(scene, camera, System.IO.Path.Combine(outDir, scene.name + "-UI.png"));
             }
 
             CaptureEffects(outDir);
@@ -136,6 +141,35 @@ namespace TowerDefence.EditorTools
             layers.arraySize = SortingLayer.layers.Length;
             for (int i = 0; i < SortingLayer.layers.Length; i++) layers.GetArrayElementAtIndex(i).intValue = SortingLayer.layers[i].id;
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // Overlay canvases are not drawn by a camera render, so route them through the camera
+        // (Screen Space - Camera) for this capture only. The scene is never saved.
+        private static void SaveWithUI(UnityEngine.SceneManagement.Scene scene, Camera camera, string file)
+        {
+            var rt = new RenderTexture(Width, Height, 24, RenderTextureFormat.ARGB32);
+            camera.targetTexture = rt;   // so canvas scalers lay out for 1280x720
+            try
+            {
+                foreach (var canvas in scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Canvas>(false)).Where(c => c.isRootCanvas))
+                {
+                    if (canvas.renderMode != RenderMode.ScreenSpaceOverlay) continue;
+                    canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                    canvas.worldCamera = camera;
+                    canvas.planeDistance = camera.nearClipPlane + 1;
+                    // The 2D renderer sorts by sorting layer first: put the UI above the map.
+                    canvas.sortingLayerID = SortingLayer.layers[SortingLayer.layers.Length - 1].id;
+                    canvas.sortingOrder = 32767;
+                }
+                Canvas.ForceUpdateCanvases();
+            }
+            finally
+            {
+                camera.targetTexture = null;
+                rt.Release();
+                UnityEngine.Object.DestroyImmediate(rt);
+            }
+            Save(camera, file);
         }
 
         private static void Save(Camera camera, string file)

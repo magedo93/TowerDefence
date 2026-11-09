@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using TMPro;
 using TowerDefence;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -61,10 +62,10 @@ public class CoreGameplayTests
 
     private MoneyScript Money(out GameObject coinTemplate, int coinPrice)
     {
-        var display = Track(new GameObject("TestMoneyDisplay", typeof(RectTransform), typeof(Text)));
+        var display = Track(new GameObject("TestMoneyDisplay", typeof(RectTransform), typeof(TextMeshProUGUI)));
         var manager = Inactive("GameManager");
         var money = manager.AddComponent<MoneyScript>();
-        money.moneyText = display.GetComponent<Text>();
+        money.moneyText = display.GetComponent<TextMeshProUGUI>();
         money.startingWealth = 0;
         money.goldProbability = 1f;
         money.coinAudio = AudioClip.Create("TestCoin", 32, 1, 44100, false);
@@ -219,10 +220,10 @@ public class CoreGameplayTests
 
     private MoneyScript Wallet(int coins)
     {
-        var display = Track(new GameObject("TestMoneyDisplay", typeof(RectTransform), typeof(Text)));
+        var display = Track(new GameObject("TestMoneyDisplay", typeof(RectTransform), typeof(TextMeshProUGUI)));
         var go = Inactive("TestWallet");
         var money = go.AddComponent<MoneyScript>();
-        money.moneyText = display.GetComponent<Text>();
+        money.moneyText = display.GetComponent<TextMeshProUGUI>();
         money.startingWealth = coins;
         go.SetActive(true);
         return money;

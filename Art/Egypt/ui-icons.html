@@ -1,0 +1,112 @@
+<!doctype html>
+<!--
+  Egyptian-theme UI icons and coins, original vector art for Tower Defence.
+  Rendered by Tools/Art/build-egypt-art.ps1 (headless Edge, one 512 px slot each), in order:
+    0 money.png (100x100)   - linen coin pouch tied with a gold cord, ankh seal
+    1 hearth.png (100x100)  - carnelian heart amulet (ib) in a gold setting
+    2 coins_0 (copper)      - coins.png cell 0: copper coin with an ankh   (32 px coin in a 64 px cell)
+    3 coins_1 (gold)        - coins.png cell 1: gold coin with the Eye of Horus
+    4 coins_2 (silver)      - coins.png cell 2: silver coin with a scarab
+    5 coins_3 (shadow)      - coins.png cell 3: coin shadow, black at 20% (as the original)
+    6 sheet cell 181        - the player's base stones at the end of the road: sandstone octagon
+  Coin faces stay readable while CoinScript flips them around the y axis.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { display: flex; width: 3584px; height: 512px; }
+  svg { width: 512px; height: 512px; flex: none; display: block; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0">
+  <defs>
+    <path id="ankh" d="M0,-46 C-20,-46 -26,-20 -8,-6 L-30,-6 L-30,6 L-6,6 L-6,46 L6,46 L6,6 L30,6 L30,-6 L8,-6 C26,-20 20,-46 0,-46 Z M0,-34 C10,-34 10,-16 0,-10 C-10,-16 -10,-34 0,-34 Z" fill-rule="evenodd"/>
+    <!-- Coin: 32 px across in a 64 px cell = radius 128 in 512 units. -->
+    <g id="coinRim"><circle cx="256" cy="256" r="124"/></g>
+  </defs>
+</svg>
+
+<!-- 0: money pouch -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <path d="M176,150 C120,210 64,300 80,380 C96,456 176,480 256,480 C336,480 416,456 432,380 C448,300 392,210 336,150 Z" fill="#5e4224"/>
+  <path d="M188,164 C138,220 92,302 106,374 C120,440 186,458 256,458 C326,458 392,440 406,374 C420,302 374,220 324,164 Z" fill="#e9d7ae"/>
+  <path d="M140,300 C150,240 190,190 226,170" fill="none" stroke="#fff4dc" stroke-width="22" stroke-linecap="round"/>
+  <path d="M330,190 C380,250 400,330 380,400" fill="none" stroke="#c9b083" stroke-width="22" stroke-linecap="round"/>
+  <!-- neck, cord and flared top -->
+  <path d="M190,70 C220,96 292,96 322,70 L340,96 C320,130 300,146 256,146 C212,146 192,130 172,96 Z" fill="#e9d7ae" stroke="#5e4224" stroke-width="18" stroke-linejoin="round"/>
+  <rect x="168" y="132" width="176" height="36" rx="18" fill="#e8b83f" stroke="#5a3d14" stroke-width="12"/>
+  <path d="M300,160 C320,200 330,220 316,250 M310,160 C350,190 362,214 360,240" fill="none" stroke="#e8b83f" stroke-width="12" stroke-linecap="round"/>
+  <!-- ankh seal -->
+  <circle cx="256" cy="330" r="74" fill="#e8b83f" stroke="#5a3d14" stroke-width="14"/>
+  <use href="#ankh" transform="translate(256 330) scale(1.05)" fill="#2d5fa8"/>
+</svg>
+
+<!-- 1: heart amulet -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <path d="M256,470 C170,400 40,320 40,190 C40,110 100,52 172,52 C212,52 240,72 256,100 C272,72 300,52 340,52 C412,52 472,110 472,190 C472,320 342,400 256,470 Z" fill="#e8b83f" stroke="#5a3d14" stroke-width="16" stroke-linejoin="round"/>
+  <path d="M256,428 C182,366 76,300 76,192 C76,130 120,88 172,88 C210,88 238,112 256,146 C274,112 302,88 340,88 C392,88 436,130 436,192 C436,300 330,366 256,428 Z" fill="#c4392b"/>
+  <path d="M256,428 C330,366 436,300 436,192 C436,150 418,118 390,102 C410,190 360,300 256,428 Z" fill="#9c2a1f"/>
+  <path d="M120,200 C120,150 150,124 186,124" fill="none" stroke="#f08a6c" stroke-width="26" stroke-linecap="round"/>
+  <circle cx="132" cy="250" r="12" fill="#f08a6c"/>
+  <!-- gold bands across the amulet -->
+  <path d="M96,248 L416,248" stroke="#e8b83f" stroke-width="14"/>
+  <path d="M96,248 L416,248" stroke="#2d5fa8" stroke-width="5"/>
+</svg>
+
+<!-- 2: copper coin -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="256" cy="256" r="124" fill="#7a3a1c"/>
+  <circle cx="256" cy="256" r="104" fill="#d97f4a"/>
+  <circle cx="256" cy="256" r="84" fill="none" stroke="#b5602f" stroke-width="10"/>
+  <use href="#ankh" transform="translate(256 256) scale(1.35)" fill="#8a4322"/>
+  <path d="M190,190 A90,90 0 0 1 250,166" fill="none" stroke="#f4b68e" stroke-width="16" stroke-linecap="round"/>
+</svg>
+
+<!-- 3: gold coin -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="256" cy="256" r="124" fill="#7a5a10"/>
+  <circle cx="256" cy="256" r="104" fill="#f2c62a"/>
+  <circle cx="256" cy="256" r="84" fill="none" stroke="#c99a12" stroke-width="10"/>
+  <g transform="translate(256 260)">
+    <path d="M-62,-6 Q0,-56 62,-6 Q0,24 -62,-6 Z" fill="#fff3b8" stroke="#6b4a08" stroke-width="12"/>
+    <circle cx="0" cy="-8" r="16" fill="#6b4a08"/>
+    <path d="M-16,14 L-26,52 M16,14 C26,38 46,40 54,26" fill="none" stroke="#6b4a08" stroke-width="12" stroke-linecap="round"/>
+  </g>
+  <path d="M190,190 A90,90 0 0 1 250,166" fill="none" stroke="#fff3b8" stroke-width="16" stroke-linecap="round"/>
+</svg>
+
+<!-- 4: silver coin -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="256" cy="256" r="124" fill="#4f565c"/>
+  <circle cx="256" cy="256" r="104" fill="#c3cbd1"/>
+  <circle cx="256" cy="256" r="84" fill="none" stroke="#949ca3" stroke-width="10"/>
+  <!-- scarab -->
+  <g fill="#5b636a">
+    <ellipse cx="256" cy="276" rx="40" ry="50"/>
+    <path d="M226,226 Q256,196 286,226 Z"/>
+    <path d="M216,256 L176,236 M216,286 L176,300 M296,256 L336,236 M296,286 L336,300" stroke="#5b636a" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <path d="M256,234 L256,322" stroke="#c3cbd1" stroke-width="6"/>
+  <path d="M190,190 A90,90 0 0 1 250,166" fill="none" stroke="#f2f5f7" stroke-width="16" stroke-linecap="round"/>
+</svg>
+
+<!-- 5: coin shadow -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="256" cy="256" r="134" fill="#000" opacity="0.2"/>
+</svg>
+
+<!-- 6: sheet cell 181, base stones -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <path d="M176,40 L336,40 L472,176 L472,336 L336,472 L176,472 L40,336 L40,176 Z" fill="#9c7444" stroke="#5e4224" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M186,66 L326,66 L446,186 L446,326 L326,446 L186,446 L66,326 L66,186 Z" fill="#e2c28a"/>
+  <path d="M66,186 L186,66 L326,66 L446,186 L420,196 L316,92 L196,92 L92,196 Z" fill="#f0d9a8"/>
+  <path d="M446,326 L326,446 L186,446 L196,420 L316,420 L420,316 Z" fill="#b8925a"/>
+  <circle cx="256" cy="256" r="104" fill="#c9a46b" stroke="#8a6638" stroke-width="8"/>
+  <circle cx="256" cy="256" r="84" fill="none" stroke="#2d5fa8" stroke-width="12"/>
+  <use href="#ankh" transform="translate(256 256) scale(1.2)" fill="#e8b83f" stroke="#6b4a1c" stroke-width="5"/>
+</svg>
+</body>
+</html>

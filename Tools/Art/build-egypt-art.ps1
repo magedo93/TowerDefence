@@ -3,7 +3,8 @@
 Builds the Egyptian-theme art from sources; no Unity needed (Windows PowerShell 5.1).
 .DESCRIPTION
 Phase 1 (map), phase 2 (enemies: Art/Egypt/enemies.html) and phase 3 (towers: Art/Egypt/towers.html
-for sheet cells, Art/Egypt/icons.html for the build-button icons):
+for sheet cells, Art/Egypt/icons.html for the build-button icons) and phase 4 (UI: Art/Egypt/ui-icons.html,
+Art/Egypt/menu-background.html):
   * Recolors the terrain cells of the original Kenney sheet (Art/Source/) into the
     Egyptian palette (Tools/Art/EgyptTerrain.cs).
   * Draws the decoration cells (130-137) from Art/Egypt/decorations.html (vector art,
@@ -20,6 +21,7 @@ param(
     [string]$Output,
     [string]$LandmarksDir,
     [string]$IconsDir,
+    [string]$UiDir,
     [string]$Edge
 )
 
@@ -82,10 +84,11 @@ if (Test-Path $decorationsPage) {
     $big.Dispose()
 
     # 2b. More cell pages, one 512 px slot per cell, same downscale. Cell lists match the
-    #     order of the <svg> slots in each page.
+    #     order of the <svg> slots in each page; -1 skips a slot.
     $cellPages = @(
         @('enemies.html', @(245, 268, 291, 271, 294)),          # phase 2: soldier, tank body, tank cannon, plane, plane shadow
-        @('towers.html', @(180, 249, 229, 275, 251, 182, 250))  # phase 3: base, cannon gun, rocket gun, ball, rocket, laser base, laser gun
+        @('towers.html', @(180, 249, 229, 275, 251, 182, 250)), # phase 3: base, cannon gun, rocket gun, ball, rocket, laser base, laser gun
+        @('ui-icons.html', @(-1, -1, -1, -1, -1, -1, 181))      # phase 4: only slot 6 (base stones) is a sheet cell; -1 = not in the sheet
     )
     foreach ($entry in $cellPages) {
         $page = Join-Path $root "Art/Egypt/$($entry[0])"
@@ -94,13 +97,13 @@ if (Test-Path $decorationsPage) {
         $shot = Render-Page $page (64 * $scale * $cells.Count) (64 * $scale)
         $big = New-Object System.Drawing.Bitmap $shot
         for ($i = 0; $i -lt $cells.Count; $i++) {
-            $cell = $cells[$i]
+            $cell = $cells[$i]; if ($cell -lt 0) { continue }
             $dest = New-Object System.Drawing.Rectangle (($cell % 23) * 64), ([math]::Floor($cell / 23) * 64), 64, 64
             $src = New-Object System.Drawing.Rectangle ($i * 64 * $scale), 0, (64 * $scale), (64 * $scale)
             $g.DrawImage($big, $dest, $src, [System.Drawing.GraphicsUnit]::Pixel)
         }
         $big.Dispose()
-        Write-Output "$($entry[0]): $($cells.Count) cells drawn"
+        Write-Output "$($entry[0]): $(@($cells | Where-Object { $_ -ge 0 }).Count) cells drawn"
     }
     $g.Dispose()
     $final = Join-Path $work 'final.png'
@@ -168,5 +171,44 @@ if (Test-Path $iconsPage) {
         Write-Output "Icon: $file ($($icon[2])x$($icon[3]))"
     }
     $big.Dispose()
+}
+
+# 5. UI (phase 4): HUD icons and coins from Art/Egypt/ui-icons.html (slots 0-5), menu background
+#    from Art/Egypt/menu-background.html. Saved over the existing files (GUIDs, slices kept):
+#    money.png / hearth.png 100x100; coins.png 256x64 = four 64 px cells (copper, gold, silver, shadow);
+#    background.png 1920x1080 (the menu stretches it over the screen).
+$uiPage = Join-Path $root 'Art/Egypt/ui-icons.html'
+if (Test-Path $uiPage) {
+    if (-not $UiDir) { $UiDir = Join-Path $root 'Assets/Sprites' }
+    New-Item -ItemType Directory -Force $UiDir | Out-Null
+    $big = New-Object System.Drawing.Bitmap (Render-Page $uiPage 3584 512)
+    function Save-Slots([string]$File, [int]$Width, [int]$Height, [int[]]$Slots, [int]$CellWidth) {
+        $bmp = New-Object System.Drawing.Bitmap $Width, $Height, ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+        $gr = [System.Drawing.Graphics]::FromImage($bmp)
+        $gr.CompositingMode = [System.Drawing.Drawing2D.CompositingMode]::SourceCopy
+        $gr.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+        $gr.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+        for ($i = 0; $i -lt $Slots.Count; $i++) {
+            $dest = New-Object System.Drawing.Rectangle ($i * $CellWidth), 0, $CellWidth, $Height
+            $src = New-Object System.Drawing.Rectangle ($Slots[$i] * 512), 0, 512, 512
+            $gr.DrawImage($big, $dest, $src, [System.Drawing.GraphicsUnit]::Pixel)
+        }
+        $gr.Dispose()
+        $path = Join-Path $UiDir $File
+        $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png); $bmp.Dispose()
+        Write-Output "UI: $path ($Width x $Height)"
+    }
+    Save-Slots 'money.png' 100 100 @(0) 100
+    Save-Slots 'hearth.png' 100 100 @(1) 100
+    Save-Slots 'coins.png' 256 64 @(2, 3, 4, 5) 64
+    $big.Dispose()
+}
+$menuPage = Join-Path $root 'Art/Egypt/menu-background.html'
+if (Test-Path $menuPage) {
+    if (-not $UiDir) { $UiDir = Join-Path $root 'Assets/Sprites' }
+    $shot = Render-Page $menuPage 1920 1080
+    $path = Join-Path $UiDir 'background.png'
+    Copy-Item $shot $path -Force
+    Write-Output "UI: $path (1920 x 1080)"
 }
 Remove-Item $work -Recurse -Force -ErrorAction SilentlyContinue

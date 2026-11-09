@@ -1,0 +1,110 @@
+<!doctype html>
+<!--
+  Egyptian-theme main-menu background, original vector art for Tower Defence.
+  Rendered by Tools/Art/build-egypt-art.ps1 (headless Edge, 1920x1080) into
+  Assets/Sprites/background.png. The menu stretches it over the whole screen, so it is
+  drawn at 16:9. The centre is kept calm and dark (lapis dusk sky): the PLAY/QUIT buttons
+  and the level-select panel sit there. No text: titles stay in the scene.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  svg { width: 1920px; height: 1080px; display: block; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b1633"/>
+      <stop offset="0.45" stop-color="#1c2f66"/>
+      <stop offset="0.70" stop-color="#7a3f5c"/>
+      <stop offset="0.82" stop-color="#e08a3c"/>
+      <stop offset="0.88" stop-color="#f2c062"/>
+    </linearGradient>
+    <linearGradient id="nile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e9a65a"/>
+      <stop offset="1" stop-color="#2a3f73"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffd27a" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#ffd27a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vignette" cx="0.5" cy="0.45" r="0.75">
+      <stop offset="0.55" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.55"/>
+    </radialGradient>
+    <g id="palm">
+      <path d="M0,0 C6,-120 2,-220 -8,-300" fill="none" stroke="#141022" stroke-width="18" stroke-linecap="round"/>
+      <g fill="#141022" transform="translate(-8 -300)">
+        <path d="M0,0 C-60,-40 -130,-30 -170,20 C-110,-10 -60,-4 0,0 Z"/>
+        <path d="M0,0 C60,-40 130,-30 170,20 C110,-10 60,-4 0,0 Z"/>
+        <path d="M0,0 C-40,-70 -110,-90 -150,-60 C-90,-60 -50,-40 0,0 Z"/>
+        <path d="M0,0 C40,-70 110,-90 150,-60 C90,-60 50,-40 0,0 Z"/>
+        <path d="M0,0 C-10,-60 -40,-110 -70,-120 C-40,-90 -20,-50 0,0 Z"/>
+        <path d="M0,0 C10,-60 40,-110 70,-120 C40,-90 20,-50 0,0 Z"/>
+      </g>
+    </g>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <!-- stars in the upper sky -->
+  <g fill="#f6ecd6">
+    <circle cx="120" cy="90" r="3"/><circle cx="310" cy="160" r="2"/><circle cx="480" cy="60" r="3"/><circle cx="640" cy="200" r="2"/>
+    <circle cx="820" cy="110" r="2"/><circle cx="1010" cy="70" r="3"/><circle cx="1180" cy="170" r="2"/><circle cx="1360" cy="80" r="3"/>
+    <circle cx="1540" cy="190" r="2"/><circle cx="1720" cy="100" r="3"/><circle cx="1850" cy="230" r="2"/><circle cx="230" cy="300" r="2"/>
+    <circle cx="1650" cy="320" r="2"/><circle cx="760" cy="330" r="2"/><circle cx="1250" cy="300" r="2"/>
+  </g>
+  <!-- setting sun behind the pyramids -->
+  <circle cx="1420" cy="830" r="300" fill="url(#glow)"/>
+  <circle cx="1420" cy="860" r="120" fill="#ffcf6a"/>
+
+  <!-- pyramids of Giza (right) -->
+  <path d="M1080,900 L1360,560 L1640,900 Z" fill="#3a2440"/>
+  <path d="M1360,560 L1640,900 L1430,900 Z" fill="#2a1a33"/>
+  <path d="M1500,900 L1700,660 L1900,900 Z" fill="#33203b"/>
+  <path d="M1700,660 L1900,900 L1760,900 Z" fill="#24162d"/>
+  <path d="M1880,900 L1980,780 L2080,900 Z" fill="#2c1c35"/>
+  <!-- obelisks (left) -->
+  <path d="M520,900 L534,610 L550,590 L566,610 L580,900 Z" fill="#2a1a33"/>
+  <path d="M640,900 L650,700 L662,684 L674,700 L684,900 Z" fill="#2a1a33"/>
+
+  <!-- the Nile with the sun's reflection -->
+  <rect x="0" y="900" width="1920" height="180" fill="url(#nile)"/>
+  <g fill="#ffd27a" opacity="0.8">
+    <rect x="1340" y="918" width="160" height="6" rx="3"/><rect x="1370" y="944" width="100" height="6" rx="3"/>
+    <rect x="1390" y="972" width="60" height="5" rx="3"/><rect x="1400" y="1000" width="40" height="5" rx="3"/>
+  </g>
+  <!-- near bank -->
+  <path d="M0,1080 L0,960 C300,930 560,990 900,1000 C1240,1010 1500,980 1920,1010 L1920,1080 Z" fill="#141022"/>
+
+  <!-- the Sphinx (left foreground) -->
+  <!-- profile facing right: rump, long back, nemes headdress with flaps, face, forward paws -->
+  <g fill="#120d1e">
+    <path d="M40,1010 L40,930 C40,890 70,872 110,872 L400,866
+             L404,800 C406,760 420,716 450,700 L470,672 C480,656 520,650 538,664
+             L548,690 L552,720 L566,742 L560,752 L566,770 L556,790 L548,800
+             L546,832 L570,838 L572,860 L560,872
+             C580,880 590,900 590,930 L780,940 C800,942 812,960 806,980 L800,1010 Z"/>
+    <path d="M404,800 L396,880 L470,880 L478,800 Z"/>
+  </g>
+  <!-- headdress stripes catching the last light -->
+  <g stroke="#3a2440" stroke-width="5" fill="none" opacity="0.9">
+    <path d="M440,712 C470,700 510,696 540,700"/><path d="M424,740 C460,728 504,724 546,726"/>
+    <path d="M414,770 L470,770"/><path d="M408,800 L474,800"/>
+  </g>
+  <!-- palms -->
+  <use href="#palm" transform="translate(150 1010) scale(1.1)"/>
+  <use href="#palm" transform="translate(960 1030) scale(0.7)"/>
+  <use href="#palm" transform="translate(1800 1030) scale(1.2) scale(-1 1)"/>
+  <use href="#palm" transform="translate(1100 1040) scale(0.55) scale(-1 1)"/>
+
+  <!-- gold border band with a lapis line -->
+  <rect x="18" y="18" width="1884" height="1044" fill="none" stroke="#e8b83f" stroke-width="10" stroke-dasharray="60 24" opacity="0.85"/>
+  <rect x="34" y="34" width="1852" height="1012" fill="none" stroke="#2d5fa8" stroke-width="4" opacity="0.8"/>
+  <rect width="1920" height="1080" fill="url(#vignette)"/>
+</svg>
+</body>
+</html>

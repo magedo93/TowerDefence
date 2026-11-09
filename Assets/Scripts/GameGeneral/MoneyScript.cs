@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -21,7 +22,7 @@ namespace TowerDefence
         public GameObject cooperPrefab;
         public AudioClip coinAudio;
 
-        public Text moneyText;
+        public TMP_Text moneyText;
 
         private AudioSource _aus;
         public event System.Action<int> BalanceChanged;

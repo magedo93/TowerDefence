@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using TMPro;
 using TowerDefence;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,11 +25,11 @@ public class LaserTowerTests
     [SetUp]
     public void SetUp()
     {
-        var display = new GameObject("TestMoneyDisplay", typeof(RectTransform), typeof(Text));
+        var display = new GameObject("TestMoneyDisplay", typeof(RectTransform), typeof(TextMeshProUGUI));
         _created.Add(display);
         var manager = Inactive("GameManager");
         _money = manager.AddComponent<MoneyScript>();
-        _money.moneyText = display.GetComponent<Text>();
+        _money.moneyText = display.GetComponent<TextMeshProUGUI>();
         _money.startingWealth = 100;
         var gameManager = manager.AddComponent<GameManager>();
         gameManager.enabled = false;

@@ -66,7 +66,7 @@ namespace TowerDefence.EditorTools
                     .Any(image => image.sprite != null && AssetDatabase.GetAssetPath(image.sprite) == "Assets/Sprites/gun.png"));
             var referenceIcon = reference.GetComponentsInChildren<Image>(true)
                 .First(image => image.sprite != null && AssetDatabase.GetAssetPath(image.sprite) == "Assets/Sprites/gun.png");
-            var referencePrice = reference.GetComponentInChildren<Text>(true);
+            var referencePrice = reference.GetComponentsInChildren<TextMeshProUGUI>(true).First(t => t.text.Trim().All(char.IsDigit));
             var iconTransform = button.transform.Find("LaserGunIcon") as RectTransform;
             if (iconTransform == null)
                 iconTransform = Rect("LaserGunIcon", button.transform, referenceIcon.rectTransform.sizeDelta, Vector2.zero);
@@ -95,18 +95,19 @@ namespace TowerDefence.EditorTools
             if (priceTransform == null)
                 priceTransform = Rect("LaserPrice", button.transform, referencePrice.rectTransform.sizeDelta, Vector2.zero);
             CopyRect(referencePrice.rectTransform, priceTransform);
-            var price = priceTransform.GetComponent<Text>();
-            if (price == null) price = priceTransform.gameObject.AddComponent<Text>();
+            // Prices are TextMeshPro since the Egyptian UI phase (EgyptUiStyle converted the legacy Text).
+            var price = priceTransform.GetComponent<TextMeshProUGUI>();
+            if (price == null) price = priceTransform.gameObject.AddComponent<TextMeshProUGUI>();
             var definition = AssetDatabase.LoadAssetAtPath<LaserTowerDefinition>(DefinitionPath);
             price.text = definition.purchaseCost.ToString();
             price.font = referencePrice.font;
+            price.fontSharedMaterial = referencePrice.fontSharedMaterial;
             price.fontSize = referencePrice.fontSize;
             price.fontStyle = referencePrice.fontStyle;
             price.alignment = referencePrice.alignment;
             price.color = referencePrice.color;
-            price.resizeTextForBestFit = referencePrice.resizeTextForBestFit;
-            price.resizeTextMinSize = referencePrice.resizeTextMinSize;
-            price.resizeTextMaxSize = referencePrice.resizeTextMaxSize;
+            price.textWrappingMode = referencePrice.textWrappingMode;
+            price.overflowMode = referencePrice.overflowMode;
             price.raycastTarget = false;
             priceTransform.SetAsLastSibling();
         }
@@ -261,10 +262,10 @@ namespace TowerDefence.EditorTools
             {
                 root.anchorMin = root.anchorMax = new Vector2(1, 0);
                 var image = root.gameObject.AddComponent<Image>();
-                image.color = new Color(0.035f, 0.09f, 0.12f, 0.97f);
+                image.color = EgyptUiStyle.PanelColor;
                 var controller = root.gameObject.AddComponent<TowerUpgradePanel>();
                 controller.title = Label("Title", root, new Vector2(400, 38), new Vector2(-15, 80), "LASER TOWER", 25);
-                controller.title.color = new Color(0.25f, 1, 0.85f);
+                controller.title.color = EgyptUiStyle.PanelTitleColor;
                 controller.statsText = Label("Stats", root, new Vector2(440, 70), new Vector2(0, 15), "", 21);
                 controller.upgradeButton = MakeButton("Upgrade", root, new Vector2(420, 48), new Vector2(0, -70), "UPGRADE", out var upgradeText);
                 controller.upgradeText = upgradeText;
@@ -343,13 +344,9 @@ namespace TowerDefence.EditorTools
         {
             var rect = Rect(name, parent, size, position);
             var image = rect.gameObject.AddComponent<Image>();
-            image.color = new Color(0.06f, 0.35f, 0.32f, 1);
             var button = rect.gameObject.AddComponent<Button>();
             button.targetGraphic = image;
-            var colors = button.colors;
-            colors.highlightedColor = new Color(0.7f, 1, 0.9f);
-            colors.disabledColor = new Color(0.35f, 0.35f, 0.35f);
-            button.colors = colors;
+            EgyptUiStyle.StylePanelButton(button);
             label = Label("Label", rect, size - new Vector2(12, 8), Vector2.zero, text, 22);
             return button;
         }
