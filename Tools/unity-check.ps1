@@ -14,10 +14,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mod
 .\Tools\unity-check.ps1 -Mode EditMode -EditorPath 'D:\Unity\Editor\Unity.exe'
 .EXAMPLE
 .\Tools\unity-check.ps1 -Mode Build   # Windows 64-bit player into Builds/Windows/
+.EXAMPLE
+.\Tools\unity-check.ps1 -Mode BuildWeb   # Web (WebGL) player into Builds/WebGL/
 #>
 [CmdletBinding()]
 param(
-    [ValidateSet('Check', 'Compile', 'EditMode', 'PlayMode', 'Build')]
+    [ValidateSet('Check', 'Compile', 'EditMode', 'PlayMode', 'Build', 'BuildWeb')]
     [string]$Mode = 'Check',
     [string]$ProjectPath,
     [string]$EditorPath,
@@ -246,6 +248,11 @@ try {
             $buildOutput = Join-Path $projectRoot 'Builds/Windows/TowerDefense.exe'
             $unityArguments += @('-quit', '-buildTarget', 'Win64', '-executeMethod', 'TowerDefence.EditorTools.BuildScript.BuildWindows', '-buildOutput', $buildOutput)
         }
+        elseif ($Mode -eq 'BuildWeb') {
+            # Web (WebGL) player into a folder with index.html; serve it with Tools/serve-web.ps1.
+            $buildOutput = Join-Path $projectRoot 'Builds/WebGL'
+            $unityArguments += @('-quit', '-buildTarget', 'WebGL', '-executeMethod', 'TowerDefence.EditorTools.BuildScript.BuildWebGL', '-buildOutput', $buildOutput)
+        }
         else {
             # The test runner owns shutdown. Keep graphics available for Play Mode.
             $unityArguments += @('-runTests', '-testPlatform', $Mode, '-testResults', $testResults)
@@ -278,10 +285,11 @@ try {
         Assert-UnityLog $unityLog
         if ($unityProcess.ExitCode -ne 0) { throw "Unity exited with code $($unityProcess.ExitCode). Inspect '$unityLog'." }
         if ($Mode -in @('EditMode', 'PlayMode')) { Assert-TestResults $testResults }
-        if ($Mode -eq 'Build') {
+        if ($Mode -in @('Build', 'BuildWeb')) {
             $buildLog = Get-Content -LiteralPath $unityLog -Raw
-            if ($buildLog -notmatch '\[BuildScript\] Player build succeeded\.') { throw "Build success marker missing from '$unityLog'." }
-            if (-not (Test-Path -LiteralPath $buildOutput -PathType Leaf)) { throw "Player executable missing: '$buildOutput'." }
+            if ($buildLog -notmatch '\[BuildScript\] \S+ build succeeded\.') { throw "Build success marker missing from '$unityLog'." }
+            $expected = if ($Mode -eq 'Build') { $buildOutput } else { Join-Path $buildOutput 'index.html' }
+            if (-not (Test-Path -LiteralPath $expected -PathType Leaf)) { throw "Build output missing: '$expected'." }
             Write-Status "Player build written to: $buildOutput"
         }
         Write-Status "$Mode passed: Unity completed and its log contains no detected compilation/startup failures."

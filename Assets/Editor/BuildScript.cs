@@ -7,32 +7,45 @@ using UnityEngine;
 
 namespace TowerDefence.EditorTools
 {
-    // Batch-mode entry point for Tools/unity-check.ps1 -Mode Build.
-    // Builds the enabled scenes from Build Settings as a Windows 64-bit player.
+    // Batch-mode entry points for Tools/unity-check.ps1 -Mode Build / -Mode BuildWeb.
+    // Both build the enabled Build Settings scenes and fail on any build-report error.
     public static class BuildScript
     {
-        public const string DefaultOutput = "Builds/Windows/TowerDefense.exe";
+        public const string DefaultWindowsOutput = "Builds/Windows/TowerDefense.exe";
+        public const string DefaultWebGLOutput = "Builds/WebGL";
 
         [MenuItem("Tools/Tower Defence/Build Windows Player")]
         public static void BuildWindows()
         {
-            var output = GetArgument("-buildOutput") ?? DefaultOutput;
+            Build(BuildTarget.StandaloneWindows64, BuildTargetGroup.Standalone, GetArgument("-buildOutput") ?? DefaultWindowsOutput, isFolder: false);
+        }
+
+        // Web version: output folder with index.html; serve it with Tools/serve-web.ps1.
+        [MenuItem("Tools/Tower Defence/Build Web (WebGL) Player")]
+        public static void BuildWebGL()
+        {
+            Build(BuildTarget.WebGL, BuildTargetGroup.WebGL, GetArgument("-buildOutput") ?? DefaultWebGLOutput, isFolder: true);
+        }
+
+        private static void Build(BuildTarget target, BuildTargetGroup group, string output, bool isFolder)
+        {
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             if (scenes.Length == 0) throw new InvalidOperationException("No enabled scenes in Build Settings.");
 
             // Fully qualified so it never clashes with the game's TowerDefence.Paths.Path class.
-            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(output)));
+            var fullOutput = System.IO.Path.GetFullPath(output);
+            Directory.CreateDirectory(isFolder ? fullOutput : System.IO.Path.GetDirectoryName(fullOutput));
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
                 scenes = scenes,
                 locationPathName = output,
-                target = BuildTarget.StandaloneWindows64,
-                targetGroup = BuildTargetGroup.Standalone,
+                target = target,
+                targetGroup = group,
                 options = BuildOptions.None
             });
 
             var summary = report.summary;
-            Debug.Log($"[BuildScript] Result: {summary.result}, errors: {summary.totalErrors}, " +
+            Debug.Log($"[BuildScript] {target} result: {summary.result}, errors: {summary.totalErrors}, " +
                       $"warnings: {summary.totalWarnings}, size: {summary.totalSize / (1024 * 1024)} MB, output: {summary.outputPath}");
             // Unity can report Succeeded while logging errors (for example a lighting precompute
             // that cannot run). Treat any reported error as a failed build so it gets looked at.
@@ -43,9 +56,9 @@ namespace TowerDefence.EditorTools
                         if (message.type == LogType.Error || message.type == LogType.Exception)
                             Debug.LogWarning($"[BuildScript] Build error in step '{step.name}': {message.content}");
                 // Throwing from -executeMethod makes batch-mode Unity exit with a non-zero code.
-                throw new Exception($"[BuildScript] Player build failed: {summary.result} ({summary.totalErrors} errors).");
+                throw new Exception($"[BuildScript] {target} build failed: {summary.result} ({summary.totalErrors} errors).");
             }
-            Debug.Log("[BuildScript] Player build succeeded.");
+            Debug.Log($"[BuildScript] {target} build succeeded.");
         }
 
         private static string GetArgument(string name)

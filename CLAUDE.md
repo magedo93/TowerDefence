@@ -26,7 +26,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mod
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mode EditMode
 # Windows 64-bit player build of the enabled Build Settings scenes -> Builds/Windows/TowerDefense.exe
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mode Build
+# Web (WebGL) build -> Builds/WebGL/ (first build is slow: platform switch + WebAssembly); then play it locally
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\unity-check.ps1 -Mode BuildWeb -TimeoutMinutes 60
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\serve-web.ps1 -Open    # http://localhost:8080/, Ctrl+C to stop
 ```
+
+- **Web version (WebGL).** Gzip + decompression fallback, so the build loads on any static host (no server headers needed); 1280x720 canvas; data caching on (`WebGLSetup`, **Tools > Tower Defence > Apply Web (WebGL) Settings**, locked by `WebGLSettingsTests`). A web build must be served over HTTP, not opened from disk: use `Tools/serve-web.ps1` (localhost only). Code that cannot work in a browser must be guarded: `Application.Quit` is a no-op there, so the main menu's Quit button has `HideOnWebGL`. No threads, no file IO, no blocking calls in game code. Public hosting is not set up (user chose local-only for now).
 
 - `-Mode Build` runs `BuildScript.BuildWindows` (`Assets/Editor/BuildScript.cs`, also under **Tools > Tower Defence > Build Windows Player**). It is the only check that catches Editor-only code (`using UnityEditor;` without `#if UNITY_EDITOR`) in runtime scripts, so run it after touching runtime code.
 - **Namespaces:** game code is in `TowerDefence`, the path plugin in `TowerDefence.Paths` (its `Path` class no longer clashes with `System.IO.Path`), Editor tools in `TowerDefence.EditorTools` (not `.Editor`, which would hide `UnityEditor.Editor`). `PrefabBrush` keeps its original `UnityEditor` namespace. Batch `-executeMethod` calls need the full name, e.g. `TowerDefence.EditorTools.BuildScript.BuildWindows`.
