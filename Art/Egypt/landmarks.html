@@ -1,0 +1,146 @@
+<!doctype html>
+<!--
+  Egyptian-theme landmarks, original vector art for Tower Defence.
+  Rendered by Tools/Art/build-egypt-art.ps1 with headless Edge at 4x and downscaled to the
+  in-game size (1 px = 1 world unit), then saved to Assets/Sprites/Egypt/Landmarks/.
+  3/4 "front-top" view, light from the top-left, soft shadows to the bottom-right.
+  Slots (final px): Pyramids 320x192, Sphinx 256x128, RamsesSquare 192x192, Obelisk 64x128.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { position: relative; width: 3328px; height: 768px; }
+  svg { position: absolute; top: 0; display: block; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14"/></filter>
+    <linearGradient id="litFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3d79a"/><stop offset="1" stop-color="#ddb46c"/></linearGradient>
+    <linearGradient id="shadeFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c79a57"/><stop offset="1" stop-color="#a87c41"/></linearGradient>
+    <linearGradient id="granite" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b98a76"/><stop offset="0.55" stop-color="#a07261"/><stop offset="1" stop-color="#7f5748"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#d49a2a"/></linearGradient>
+    <linearGradient id="lime" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecd09a"/><stop offset="1" stop-color="#cfa865"/></linearGradient>
+    <!-- Pyramid: apex (0,-h), base -w..w at y=0; lit left face, shaded right face, stone courses. -->
+    <g id="pyramid">
+      <path d="M0,-520 L-330,0 L40,0 Z" fill="url(#litFace)"/>
+      <path d="M0,-520 L40,0 L330,0 Z" fill="url(#shadeFace)"/>
+      <g stroke="#b48a4c" stroke-width="7" opacity="0.55">
+        <path d="M-32,-470 L4,-470"/><path d="M-63,-420 L8,-420"/><path d="M-95,-370 L11,-370"/><path d="M-127,-320 L15,-320"/>
+        <path d="M-159,-270 L19,-270"/><path d="M-190,-220 L23,-220"/><path d="M-222,-170 L27,-170"/><path d="M-254,-120 L31,-120"/><path d="M-286,-70 L35,-70"/><path d="M-317,-20 L38,-20"/>
+      </g>
+      <g stroke="#8d6533" stroke-width="7" opacity="0.5">
+        <path d="M4,-470 L32,-470"/><path d="M8,-420 L63,-420"/><path d="M11,-370 L95,-370"/><path d="M15,-320 L127,-320"/>
+        <path d="M19,-270 L159,-270"/><path d="M23,-220 L190,-220"/><path d="M27,-170 L222,-170"/><path d="M31,-120 L254,-120"/><path d="M35,-70 L286,-70"/><path d="M38,-20 L317,-20"/>
+      </g>
+      <path d="M0,-520 L40,0" stroke="#9a733c" stroke-width="6"/>
+    </g>
+    <g id="palm" transform="scale(1)">
+      <path d="M0,0 Q6,-60 0,-120" stroke="#8a5a2b" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <g fill="#5a9a32"><path d="M0,-120 Q-50,-140 -76,-104 Q-40,-120 0,-118Z"/><path d="M0,-120 Q50,-140 76,-104 Q40,-120 0,-118Z"/><path d="M0,-122 Q-30,-170 -60,-170 Q-30,-150 0,-120Z"/><path d="M0,-122 Q30,-170 60,-170 Q30,-150 0,-120Z"/></g>
+      <g fill="#447a26"><path d="M0,-120 Q-40,-100 -56,-70 Q-34,-104 0,-116Z"/><path d="M0,-120 Q40,-100 56,-70 Q34,-104 0,-116Z"/></g>
+    </g>
+  </defs>
+</svg>
+
+<!-- Pyramids of Giza: 1280x768 (final 320x192) -->
+<svg viewBox="0 0 1280 768" width="1280" height="768" style="left:0" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="700" cy="720" rx="600" ry="50" fill="#000" opacity="0.25" filter="url(#blur)"/>
+  <path d="M80,736 Q640,640 1220,736 Z" fill="#d9b06a" opacity="0.6"/>
+  <g transform="translate(1000 700) scale(0.62)"><use href="#pyramid"/></g>
+  <g transform="translate(790 712) scale(0.8)"><use href="#pyramid"/></g>
+  <g transform="translate(420 730) scale(1.25)"><use href="#pyramid"/><path d="M0,-520 L-40,-458 L5,-458 Z" fill="url(#gold)"/><path d="M0,-520 L5,-458 L36,-458 Z" fill="#c08a2a"/></g>
+</svg>
+
+<!-- Sphinx (Abu al-Hol): 1024x512 (final 256x128), facing left -->
+<svg viewBox="0 0 1024 512" width="1024" height="512" style="left:1280px" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="560" cy="470" rx="470" ry="34" fill="#000" opacity="0.25" filter="url(#blur)"/>
+  <!-- plinth -->
+  <path d="M60,410 L960,410 L990,470 L40,470 Z" fill="#c9a062"/>
+  <path d="M60,410 L960,410 L966,424 L56,424 Z" fill="#e3c084"/>
+  <!-- body -->
+  <path d="M300,410 L300,300 Q300,250 360,240 L800,250 Q900,256 910,330 L920,410 Z" fill="url(#lime)"/>
+  <path d="M560,248 Q640,320 900,330 L910,410 L560,410 Z" fill="#c9a062" opacity="0.55"/>
+  <!-- haunch + tail -->
+  <path d="M760,410 Q760,320 850,300 Q920,300 920,410 Z" fill="#d7b475"/>
+  <path d="M920,400 Q980,396 972,360" stroke="#b48a4c" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <!-- front legs and paws -->
+  <path d="M120,410 L120,374 Q120,352 146,352 L340,352 L340,410 Z" fill="#e2c387"/>
+  <path d="M100,410 L100,392 Q100,378 118,378 L300,378 L300,410 Z" fill="#d5b273"/>
+  <g stroke="#b48a4c" stroke-width="6"><path d="M128,394 L128,410"/><path d="M146,394 L146,410"/><path d="M164,394 L164,410"/></g>
+  <!-- chest -->
+  <path d="M300,410 L300,300 Q300,270 340,262 L370,410 Z" fill="#d9b677"/>
+  <!-- head with nemes -->
+  <path d="M250,300 L250,140 Q250,86 330,80 Q410,86 410,140 L410,300 Q380,320 330,322 Q280,320 250,300 Z" fill="#e7c98c"/>
+  <g stroke="#5a7fa8" stroke-width="12" opacity="0.55"><path d="M262,170 L262,296"/><path d="M398,170 L398,296"/><path d="M276,176 L276,302"/><path d="M384,176 L384,302"/></g>
+  <path d="M262,118 Q330,70 398,118 L398,138 Q330,104 262,138 Z" fill="#d6b06c"/>
+  <!-- face -->
+  <path d="M286,150 Q330,136 374,150 L374,252 Q330,284 286,252 Z" fill="#f0d49c"/>
+  <path d="M296,186 Q312,178 326,188" stroke="#6a4a24" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M336,188 Q350,178 366,186" stroke="#6a4a24" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M330,198 L322,232 L340,232" stroke="#b48a4c" stroke-width="6" fill="none"/>
+  <path d="M312,252 Q330,260 350,252" stroke="#8d6533" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- beard -->
+  <path d="M318,280 L342,280 L338,330 L322,330 Z" fill="#c9a062"/>
+  <!-- outline -->
+  <path d="M250,300 L250,140 Q250,86 330,80 Q410,86 410,140 L410,300" stroke="#a87c41" stroke-width="8" fill="none"/>
+</svg>
+
+<!-- Ramses Square: 768x768 (final 192x192) -->
+<svg viewBox="0 0 768 768" width="768" height="768" style="left:2304px" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="400" cy="420" rx="360" ry="330" fill="#000" opacity="0.18" filter="url(#blur)"/>
+  <!-- round granite plaza -->
+  <circle cx="384" cy="400" r="350" fill="#9a8270"/>
+  <circle cx="384" cy="400" r="350" fill="none" stroke="#6f5a4a" stroke-width="14"/>
+  <circle cx="384" cy="400" r="270" fill="none" stroke="#83705f" stroke-width="10"/>
+  <circle cx="384" cy="400" r="190" fill="#b19a83"/>
+  <circle cx="384" cy="400" r="190" fill="none" stroke="#83705f" stroke-width="10"/>
+  <g stroke="#83705f" stroke-width="8"><path d="M384,50 L384,130"/><path d="M384,670 L384,750"/><path d="M34,400 L114,400"/><path d="M654,400 L734,400"/><path d="M137,153 L193,209"/><path d="M631,153 L575,209"/><path d="M137,647 L193,591"/><path d="M631,647 L575,591"/></g>
+  <!-- palms -->
+  <g transform="translate(140 260) scale(0.9)"><use href="#palm"/></g>
+  <g transform="translate(628 260) scale(0.9)"><use href="#palm"/></g>
+  <g transform="translate(150 650) scale(0.9)"><use href="#palm"/></g>
+  <g transform="translate(618 650) scale(0.9)"><use href="#palm"/></g>
+  <!-- lamps -->
+  <g fill="#3b3b3b"><rect x="242" y="250" width="10" height="70"/><rect x="516" y="250" width="10" height="70"/><rect x="242" y="520" width="10" height="70"/><rect x="516" y="520" width="10" height="70"/></g>
+  <g fill="#ffd36b"><circle cx="247" cy="246" r="14"/><circle cx="521" cy="246" r="14"/><circle cx="247" cy="516" r="14"/><circle cx="521" cy="516" r="14"/></g>
+  <!-- plinth -->
+  <path d="M300,500 L468,500 L484,560 L284,560 Z" fill="#8c6a52"/>
+  <path d="M300,500 L468,500 L470,512 L298,512 Z" fill="#a8836a"/>
+  <!-- Ramses II statue (front view) -->
+  <g transform="translate(384 500)">
+    <path d="M-46,0 L-40,-150 L40,-150 L46,0 Z" fill="url(#granite)"/>
+    <path d="M-40,-150 L-40,-60 L40,-60 L40,-150 Z" fill="#b48a76"/>
+    <path d="M-52,-262 Q-58,-200 -46,-150 L46,-150 Q58,-200 52,-262 Q0,-280 -52,-262 Z" fill="url(#granite)"/>
+    <path d="M-52,-240 L52,-240 L46,-214 L-46,-214 Z" fill="url(#gold)"/>
+    <path d="M-30,-206 L30,-196 M-30,-196 L30,-206" stroke="#7f5748" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-22,-262 L22,-262 L18,-290 L-18,-290 Z" fill="#a07261"/>
+    <path d="M-24,-318 Q0,-342 24,-318 L24,-292 L-24,-292 Z" fill="#a07261"/>
+    <path d="M-22,-330 Q0,-370 22,-330 L22,-318 L-22,-318 Z" fill="#f2efe6"/>
+    <path d="M-40,-322 L-24,-300 L-24,-292 L-44,-292 Z" fill="#c0392b"/>
+    <path d="M40,-322 L24,-300 L24,-292 L44,-292 Z" fill="#c0392b"/>
+    <path d="M-14,-306 Q0,-300 14,-306" stroke="#5c3d30" stroke-width="5" fill="none"/>
+    <rect x="-6" y="-292" width="12" height="26" fill="#8c6a52"/>
+  </g>
+</svg>
+
+<!-- Obelisk: 256x512 (final 64x128) -->
+<svg viewBox="0 0 256 512" width="256" height="512" style="left:3072px" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="150" cy="486" rx="104" ry="20" fill="#000" opacity="0.28" filter="url(#blur)"/>
+  <path d="M70,500 L186,500 L180,470 L76,470 Z" fill="#8c6a52"/>
+  <path d="M90,470 L104,86 L128,60 L128,470 Z" fill="#b98a76"/>
+  <path d="M128,470 L128,60 L152,86 L166,470 Z" fill="#8a5f4e"/>
+  <path d="M104,86 L128,20 L128,60 Z" fill="url(#gold)"/>
+  <path d="M128,20 L152,86 L128,60 Z" fill="#c08a2a"/>
+  <g fill="none" stroke="#6d4a3c" stroke-width="5" stroke-linecap="round">
+    <path d="M112,130 a8,8 0 1 1 0.1,0"/><path d="M112,146 L112,170 M104,154 L120,154"/>
+    <path d="M104,200 L122,200 M104,210 L122,210"/><path d="M106,240 Q114,228 122,240 Q114,252 106,240"/>
+    <path d="M104,282 L122,282 L113,300 Z"/><path d="M106,330 l5,-6 l5,6 l5,-6"/>
+    <path d="M112,360 L112,392 M104,372 L120,372"/><path d="M106,420 Q114,408 122,420"/>
+  </g>
+</svg>
+</body>
+</html>

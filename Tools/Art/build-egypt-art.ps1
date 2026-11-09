@@ -17,6 +17,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\Art\build-egypt-art.
 [CmdletBinding()]
 param(
     [string]$Output,
+    [string]$LandmarksDir,
     [string]$Edge
 )
 
@@ -74,5 +75,36 @@ if (Test-Path $decorationsPage) {
 else {
     Copy-Item $terrain $Output -Force
 }
-Remove-Item $work -Recurse -Force -ErrorAction SilentlyContinue
 Write-Output "Wrote $Output"
+
+# 3. Landmarks: render Art/Egypt/landmarks.html at 4x and save each slot at in-game size
+#    (1 px = 1 world unit) as its own sprite.
+$landmarksPage = Join-Path $root 'Art/Egypt/landmarks.html'
+if (Test-Path $landmarksPage) {
+    if (-not $LandmarksDir) { $LandmarksDir = Join-Path $root 'Assets/Sprites/Egypt/Landmarks' }
+    New-Item -ItemType Directory -Force $LandmarksDir | Out-Null
+    $shot = Join-Path $work 'landmarks.png'
+    $edgeArgs = @('--headless', '--disable-gpu', '--hide-scrollbars', '--default-background-color=00000000',
+                  '--window-size=3328,768', "--screenshot=$shot", "--user-data-dir=$(Join-Path $work 'edge-profile2')",
+                  ('file:///' + ($landmarksPage -replace '\\', '/')))
+    $p = Start-Process -FilePath $Edge -ArgumentList $edgeArgs -PassThru -Wait -WindowStyle Hidden
+    if (-not (Test-Path $shot)) { throw "Edge did not produce $shot (exit $($p.ExitCode))." }
+    $big = New-Object System.Drawing.Bitmap $shot
+    # name, slot left (4x px), width, height (final px)
+    $slots = @(@('Pyramids', 0, 320, 192), @('Sphinx', 1280, 256, 128), @('RamsesSquare', 2304, 192, 192), @('Obelisk', 3072, 64, 128))
+    foreach ($s in $slots) {
+        $bmp = New-Object System.Drawing.Bitmap $s[2], $s[3], ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+        $g = [System.Drawing.Graphics]::FromImage($bmp)
+        $g.CompositingMode = [System.Drawing.Drawing2D.CompositingMode]::SourceCopy
+        $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+        $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+        $src = New-Object System.Drawing.Rectangle $s[1], 0, ($s[2] * 4), ($s[3] * 4)
+        $g.DrawImage($big, (New-Object System.Drawing.Rectangle 0, 0, $s[2], $s[3]), $src, [System.Drawing.GraphicsUnit]::Pixel)
+        $g.Dispose()
+        $file = Join-Path $LandmarksDir "$($s[0]).png"
+        $bmp.Save($file, [System.Drawing.Imaging.ImageFormat]::Png); $bmp.Dispose()
+        Write-Output "Landmark: $file ($($s[2])x$($s[3]))"
+    }
+    $big.Dispose()
+}
+Remove-Item $work -Recurse -Force -ErrorAction SilentlyContinue

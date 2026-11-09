@@ -5,7 +5,9 @@
     "Unity.RenderPipelines.Core.Runtime",
     "Unity.RenderPipelines.Universal.Runtime",
     "Unity.RenderPipelines.Universal.2D.Runtime",
-    "UnityEngine.UI"
+    "UnityEngine.UI",
+    "TowerDefence.Editor",
+    "TowerDefence.Paths"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
