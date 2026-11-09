@@ -1,0 +1,156 @@
+<!doctype html>
+<!--
+  Egyptian-theme map decorations, original vector art for Tower Defence.
+  Rendered by Tools/Art/build-egypt-art.ps1 (headless Edge, 512 px per cell, downscaled to 64)
+  into tile-sheet cells 130-137, in this order: date palm, young palm, papyrus, lotus pool,
+  aloe, sandstone rock, fallen column, hieroglyph stone. Top-down view, flat shading,
+  light from the top-left, soft shadow to the bottom-right (matches the Kenney style).
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { display: flex; width: 4096px; height: 512px; }
+  svg { width: 512px; height: 512px; flex: none; display: block; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter>
+    <!-- One palm frond pointing up from the crown at (256,256). -->
+    <path id="frond" d="M256,256 C214,196 214,112 256,44 C298,112 298,196 256,256 Z"/>
+    <path id="frondDark" d="M256,256 C214,196 214,112 256,44 L256,256 Z"/>
+    <path id="frondRib" d="M256,250 L256,58" fill="none" stroke-width="6" stroke-linecap="round"/>
+  </defs>
+</svg>
+
+<!-- 130: date palm -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="284" cy="290" rx="190" ry="180" fill="#000" opacity="0.22" filter="url(#soft)"/>
+  <g>
+    <g fill="#4f8a2c"><use href="#frond" transform="rotate(0 256 256)"/><use href="#frond" transform="rotate(90 256 256)"/><use href="#frond" transform="rotate(180 256 256)"/><use href="#frond" transform="rotate(270 256 256)"/></g>
+    <g fill="#3d7124"><use href="#frondDark" transform="rotate(0 256 256)"/><use href="#frondDark" transform="rotate(90 256 256)"/><use href="#frondDark" transform="rotate(180 256 256)"/><use href="#frondDark" transform="rotate(270 256 256)"/></g>
+    <g fill="#6aa63a"><use href="#frond" transform="rotate(45 256 256)"/><use href="#frond" transform="rotate(135 256 256)"/><use href="#frond" transform="rotate(225 256 256)"/><use href="#frond" transform="rotate(315 256 256)"/></g>
+    <g fill="#57912f"><use href="#frondDark" transform="rotate(45 256 256)"/><use href="#frondDark" transform="rotate(135 256 256)"/><use href="#frondDark" transform="rotate(225 256 256)"/><use href="#frondDark" transform="rotate(315 256 256)"/></g>
+    <g stroke="#2f5a1c" opacity="0.7"><use href="#frondRib" transform="rotate(0 256 256)"/><use href="#frondRib" transform="rotate(45 256 256)"/><use href="#frondRib" transform="rotate(90 256 256)"/><use href="#frondRib" transform="rotate(135 256 256)"/><use href="#frondRib" transform="rotate(180 256 256)"/><use href="#frondRib" transform="rotate(225 256 256)"/><use href="#frondRib" transform="rotate(270 256 256)"/><use href="#frondRib" transform="rotate(315 256 256)"/></g>
+    <circle cx="256" cy="256" r="40" fill="#8a5a2b"/>
+    <circle cx="248" cy="248" r="28" fill="#a46d36"/>
+    <g fill="#d9822b"><circle cx="228" cy="292" r="12"/><circle cx="246" cy="300" r="12"/><circle cx="292" cy="276" r="12"/><circle cx="296" cy="256" r="11"/></g>
+    <g fill="#f0a23c"><circle cx="225" cy="288" r="5"/><circle cx="243" cy="296" r="5"/><circle cx="289" cy="272" r="5"/></g>
+  </g>
+</svg>
+
+<!-- 131: young palm -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="276" cy="280" rx="120" ry="112" fill="#000" opacity="0.22" filter="url(#soft)"/>
+  <g transform="translate(256 256) scale(0.56) translate(-256 -256)">
+    <g fill="#5a9a32"><use href="#frond" transform="rotate(10 256 256)"/><use href="#frond" transform="rotate(130 256 256)"/><use href="#frond" transform="rotate(250 256 256)"/></g>
+    <g fill="#447a26"><use href="#frondDark" transform="rotate(10 256 256)"/><use href="#frondDark" transform="rotate(130 256 256)"/><use href="#frondDark" transform="rotate(250 256 256)"/></g>
+    <g fill="#74b244"><use href="#frond" transform="rotate(70 256 256)"/><use href="#frond" transform="rotate(190 256 256)"/><use href="#frond" transform="rotate(310 256 256)"/></g>
+    <g fill="#5f9a35"><use href="#frondDark" transform="rotate(70 256 256)"/><use href="#frondDark" transform="rotate(190 256 256)"/><use href="#frondDark" transform="rotate(310 256 256)"/></g>
+    <circle cx="256" cy="256" r="34" fill="#8a5a2b"/>
+    <circle cx="249" cy="249" r="22" fill="#a46d36"/>
+  </g>
+</svg>
+
+<!-- 132: papyrus clump -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="276" cy="286" rx="170" ry="150" fill="#000" opacity="0.2" filter="url(#soft)"/>
+  <g stroke="#4c8a2a" stroke-width="12" stroke-linecap="round" fill="none">
+    <path d="M256,300 Q232,210 150,140"/><path d="M256,300 Q262,200 260,100"/><path d="M256,300 Q300,220 372,150"/>
+    <path d="M256,300 Q196,276 120,262"/><path d="M256,300 Q330,286 396,280"/>
+  </g>
+  <g>
+    <g transform="translate(150 140)"><circle r="62" fill="#9cc251"/><path d="M0,0 L-58,-22 M0,0 L-46,-44 M0,0 L-22,-58 M0,0 L4,-62 M0,0 L28,-56 M0,0 L50,-38 M0,0 L60,-14 M0,0 L-60,4" stroke="#6e9a33" stroke-width="7"/><circle r="12" fill="#c9a640"/></g>
+    <g transform="translate(260 100)"><circle r="66" fill="#a8cc5a"/><path d="M0,0 L-62,-18 M0,0 L-50,-42 M0,0 L-26,-60 M0,0 L2,-66 M0,0 L30,-58 M0,0 L52,-40 M0,0 L64,-14 M0,0 L-64,8 M0,0 L64,10" stroke="#729f36" stroke-width="7"/><circle r="13" fill="#c9a640"/></g>
+    <g transform="translate(372 150)"><circle r="60" fill="#9cc251"/><path d="M0,0 L-56,-20 M0,0 L-44,-42 M0,0 L-20,-56 M0,0 L6,-60 M0,0 L30,-52 M0,0 L50,-34 M0,0 L58,-10 M0,0 L58,16" stroke="#6e9a33" stroke-width="7"/><circle r="12" fill="#c9a640"/></g>
+    <g transform="translate(120 262)"><circle r="50" fill="#8fb648"/><path d="M0,0 L-48,-14 M0,0 L-38,-32 M0,0 L-18,-46 M0,0 L4,-50 M0,0 L-48,10 M0,0 L-40,30" stroke="#638d2e" stroke-width="6"/><circle r="10" fill="#c9a640"/></g>
+    <g transform="translate(396 280)"><circle r="50" fill="#8fb648"/><path d="M0,0 L48,-14 M0,0 L38,-32 M0,0 L18,-46 M0,0 L-4,-50 M0,0 L48,10 M0,0 L40,30" stroke="#638d2e" stroke-width="6"/><circle r="10" fill="#c9a640"/></g>
+  </g>
+  <ellipse cx="256" cy="304" rx="54" ry="30" fill="#4c7d2a"/>
+</svg>
+
+<!-- 133: lotus pool -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="276" cy="276" r="236" fill="#000" opacity="0.2" filter="url(#soft)"/>
+  <circle cx="256" cy="256" r="236" fill="#c9a774"/>
+  <circle cx="256" cy="256" r="236" fill="none" stroke="#a9875a" stroke-width="10"/>
+  <g stroke="#a9875a" stroke-width="8">
+    <path d="M256,20 L256,58"/><path d="M256,454 L256,492"/><path d="M20,256 L58,256"/><path d="M454,256 L492,256"/>
+    <path d="M89,89 L116,116"/><path d="M423,89 L396,116"/><path d="M89,423 L116,396"/><path d="M423,423 L396,396"/>
+  </g>
+  <circle cx="256" cy="256" r="196" fill="#2f8fb3"/>
+  <circle cx="256" cy="256" r="196" fill="none" stroke="#1f6f8f" stroke-width="14"/>
+  <g fill="none" stroke="#7fc6df" stroke-width="7" stroke-linecap="round" opacity="0.8">
+    <path d="M120,200 q30,-14 60,0"/><path d="M300,380 q30,-14 60,0"/><path d="M330,170 q24,-12 48,0"/>
+  </g>
+  <path d="M170,300 a62,62 0 1 1 60,62 l-12,-56 z" fill="#4f9a3a"/>
+  <path d="M330,260 a50,50 0 1 1 46,52 l-8,-46 z" fill="#5aa843"/>
+  <path d="M220,160 a40,40 0 1 1 38,40 l-6,-36 z" fill="#4f9a3a"/>
+  <g transform="translate(232 300)">
+    <path d="M0,-46 C20,-20 20,10 0,22 C-20,10 -20,-20 0,-46 Z" fill="#f4a7c0"/>
+    <path d="M0,-46 C20,-20 20,10 0,22 C-20,10 -20,-20 0,-46 Z" fill="#f08db0" transform="rotate(-50)"/>
+    <path d="M0,-46 C20,-20 20,10 0,22 C-20,10 -20,-20 0,-46 Z" fill="#f08db0" transform="rotate(50)"/>
+    <path d="M0,-40 C14,-18 14,6 0,16 C-14,6 -14,-18 0,-40 Z" fill="#fbd0de"/>
+    <circle r="9" fill="#f6c443"/>
+  </g>
+</svg>
+
+<!-- 134: aloe -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="276" cy="280" rx="200" ry="190" fill="#000" opacity="0.2" filter="url(#soft)"/>
+  <defs><path id="aloeLeaf" d="M256,256 C236,200 240,110 256,30 C272,110 276,200 256,256 Z"/></defs>
+  <g fill="#5f9e86"><use href="#aloeLeaf"/><use href="#aloeLeaf" transform="rotate(72 256 256)"/><use href="#aloeLeaf" transform="rotate(144 256 256)"/><use href="#aloeLeaf" transform="rotate(216 256 256)"/><use href="#aloeLeaf" transform="rotate(288 256 256)"/></g>
+  <g fill="#7dbc9f" transform="rotate(36 256 256) translate(256 256) scale(0.8) translate(-256 -256)"><use href="#aloeLeaf"/><use href="#aloeLeaf" transform="rotate(72 256 256)"/><use href="#aloeLeaf" transform="rotate(144 256 256)"/><use href="#aloeLeaf" transform="rotate(216 256 256)"/><use href="#aloeLeaf" transform="rotate(288 256 256)"/></g>
+  <g fill="#9fd4b8" transform="translate(256 256) scale(0.45) translate(-256 -256)"><use href="#aloeLeaf"/><use href="#aloeLeaf" transform="rotate(72 256 256)"/><use href="#aloeLeaf" transform="rotate(144 256 256)"/><use href="#aloeLeaf" transform="rotate(216 256 256)"/><use href="#aloeLeaf" transform="rotate(288 256 256)"/></g>
+  <circle cx="256" cy="256" r="16" fill="#e8a33b"/>
+</svg>
+
+<!-- 135: sandstone rock -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <path d="M190,190 L300,160 L360,230 L340,330 L240,350 L170,290 Z" fill="#000" opacity="0.22" filter="url(#soft)" transform="translate(18 22)"/>
+  <path d="M190,190 L300,160 L360,230 L340,330 L240,350 L170,290 Z" fill="#c2955b"/>
+  <path d="M190,190 L300,160 L360,230 L270,250 Z" fill="#dcb47a"/>
+  <path d="M270,250 L360,230 L340,330 Z" fill="#a97e48"/>
+  <path d="M170,290 L270,250 L240,350 Z" fill="#b48852"/>
+  <path d="M190,190 L300,160 L360,230 L340,330 L240,350 L170,290 Z" fill="none" stroke="#8c6638" stroke-width="8" stroke-linejoin="round"/>
+</svg>
+
+<!-- 136: fallen column -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <g transform="rotate(-32 256 256)">
+    <rect x="70" y="200" width="380" height="120" rx="20" fill="#000" opacity="0.22" filter="url(#soft)" transform="translate(16 24)"/>
+    <rect x="96" y="204" width="330" height="104" fill="#e3cfa2"/>
+    <g stroke="#c4ad7d" stroke-width="8"><path d="M96,222 L426,222"/><path d="M96,240 L426,240"/><path d="M96,258 L426,258"/><path d="M96,276 L426,276"/><path d="M96,294 L426,294"/></g>
+    <rect x="96" y="204" width="330" height="18" fill="#f2e2bb"/>
+    <rect x="60" y="186" width="56" height="140" rx="10" fill="#d6be8c"/>
+    <rect x="60" y="186" width="56" height="26" rx="8" fill="#ead6aa"/>
+    <path d="M426,204 L446,214 L432,232 L452,252 L434,272 L448,292 L426,308 Z" fill="#cbb382"/>
+    <path d="M96,204 L426,204 L426,308 L96,308 Z" fill="none" stroke="#a88f5f" stroke-width="7"/>
+  </g>
+  <g fill="#cbb382"><path d="M380,380 l26,-8 l12,22 l-24,12 z"/><path d="M420,330 l18,-4 l6,16 l-18,6 z"/></g>
+</svg>
+
+<!-- 137: hieroglyph stone -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <g transform="rotate(8 256 256)">
+    <rect x="112" y="112" width="288" height="288" rx="18" fill="#000" opacity="0.22" filter="url(#soft)" transform="translate(18 22)"/>
+    <rect x="112" y="112" width="288" height="288" rx="18" fill="#d9bd85"/>
+    <rect x="112" y="112" width="288" height="40" rx="14" fill="#ebd4a3"/>
+    <rect x="112" y="112" width="288" height="288" rx="18" fill="none" stroke="#a68752" stroke-width="10"/>
+    <g fill="none" stroke="#7a5a2c" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+      <!-- ankh -->
+      <ellipse cx="190" cy="196" rx="20" ry="26"/><path d="M190,222 L190,300"/><path d="M160,236 L220,236"/>
+      <!-- eye of Horus -->
+      <path d="M262,196 Q300,166 344,196 Q300,222 262,196 Z"/><circle cx="302" cy="196" r="8" fill="#7a5a2c"/><path d="M290,214 L284,250 Q300,262 314,250"/>
+      <!-- bird -->
+      <path d="M262,300 Q280,270 312,280 L340,276 L318,292 Q300,318 270,316 Z"/><path d="M290,316 L286,338 M302,314 L302,338"/>
+      <!-- water line -->
+      <path d="M162,340 l14,-12 l14,12 l14,-12 l14,12"/>
+    </g>
+  </g>
+</svg>
+</body>
+</html>

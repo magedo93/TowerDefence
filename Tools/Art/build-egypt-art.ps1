@@ -1,0 +1,78 @@
+<#
+.SYNOPSIS
+Builds the Egyptian-theme art from sources; no Unity needed (Windows PowerShell 5.1).
+.DESCRIPTION
+Phase 1 (map):
+  * Recolors the terrain cells of the original Kenney sheet (Art/Source/) into the
+    Egyptian palette (Tools/Art/EgyptTerrain.cs).
+  * Draws the decoration cells (130-137) from Art/Egypt/decorations.html (vector art,
+    rendered by headless Microsoft Edge, downscaled with high-quality filtering).
+The result has the exact size and cell layout of the original sheet, so Unity's existing
+sprite slices (GUIDs, names, rects) and every tile/prefab reference keep working.
+.EXAMPLE
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Tools\Art\build-egypt-art.ps1
+.EXAMPLE
+.\Tools\Art\build-egypt-art.ps1 -Output "$env:TEMP\preview.png"   # preview without touching Assets
+#>
+[CmdletBinding()]
+param(
+    [string]$Output,
+    [string]$Edge
+)
+
+$ErrorActionPreference = 'Stop'
+$root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+if (-not $Output) { $Output = Join-Path $root 'Assets/Sprites/Sheets/towerDefense_tilesheet.png' }
+$source = Join-Path $root 'Art/Source/towerDefense_tilesheet_kenney.png'
+$work = Join-Path $env:TEMP ('egypt-art-' + [guid]::NewGuid().ToString('N').Substring(0, 8))
+New-Item -ItemType Directory -Force $work | Out-Null
+
+Add-Type -AssemblyName System.Drawing
+Add-Type -Path (Join-Path $PSScriptRoot 'EgyptTerrain.cs') -ReferencedAssemblies System.Drawing
+
+# 1. Terrain recolor (decoration cells are drawn separately).
+$decorationCells = 130..137
+$terrain = Join-Path $work 'terrain.png'
+$count = [EgyptTerrain]::RecolorSheet($source, $terrain, [int[]]$decorationCells)
+Write-Output "Terrain cells recolored: $count"
+
+# 2. Decorations: render the vector art page with headless Edge, then paste into the cells.
+$decorationsPage = Join-Path $root 'Art/Egypt/decorations.html'
+if (Test-Path $decorationsPage) {
+    if (-not $Edge) {
+        $Edge = @("${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe", "$env:ProgramFiles\Microsoft\Edge\Application\msedge.exe") |
+            Where-Object { Test-Path $_ } | Select-Object -First 1
+    }
+    if (-not $Edge) { throw 'Microsoft Edge not found; pass -Edge <path to msedge.exe>.' }
+    $shot = Join-Path $work 'decorations.png'
+    $scale = 8   # cells are drawn at 512 px and downscaled to 64 px
+    $count = $decorationCells.Count
+    $args = @('--headless', '--disable-gpu', '--hide-scrollbars', '--default-background-color=00000000',
+              "--window-size=$(64 * $scale * $count),$(64 * $scale)", "--screenshot=$shot",
+              "--user-data-dir=$(Join-Path $work 'edge-profile')", ('file:///' + ($decorationsPage -replace '\\', '/')))
+    $p = Start-Process -FilePath $Edge -ArgumentList $args -PassThru -Wait -WindowStyle Hidden
+    if (-not (Test-Path $shot)) { throw "Edge did not produce $shot (exit $($p.ExitCode))." }
+
+    $sheet = New-Object System.Drawing.Bitmap $terrain
+    $big = New-Object System.Drawing.Bitmap $shot
+    $g = [System.Drawing.Graphics]::FromImage($sheet)
+    $g.CompositingMode = [System.Drawing.Drawing2D.CompositingMode]::SourceCopy
+    $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+    $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+    for ($i = 0; $i -lt $count; $i++) {
+        $cell = $decorationCells[$i]
+        $dest = New-Object System.Drawing.Rectangle (($cell % 23) * 64), ([math]::Floor($cell / 23) * 64), 64, 64
+        $src = New-Object System.Drawing.Rectangle ($i * 64 * $scale), 0, (64 * $scale), (64 * $scale)
+        $g.DrawImage($big, $dest, $src, [System.Drawing.GraphicsUnit]::Pixel)
+    }
+    $g.Dispose(); $big.Dispose()
+    $final = Join-Path $work 'final.png'
+    $sheet.Save($final, [System.Drawing.Imaging.ImageFormat]::Png); $sheet.Dispose()
+    Copy-Item $final $Output -Force
+    Write-Output "Decorations drawn: $count"
+}
+else {
+    Copy-Item $terrain $Output -Force
+}
+Remove-Item $work -Recurse -Force -ErrorAction SilentlyContinue
+Write-Output "Wrote $Output"
