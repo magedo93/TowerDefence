@@ -1,7 +1,10 @@
 # Laser selection icon
 
 Asset: `Assets/Sprites/Towers/LaserEmitter.png`.
-Created with the built-in image generation tool. The current icon uses
+Superseded by the Egyptian art phase 3: the file is now generated from `Art/Egypt/icons.html` by
+`Tools/Art/build-egypt-art.ps1` (same size and GUID). The history below is kept for reference.
+
+Originally created with the built-in image generation tool. The current icon uses
 `Assets/Sprites/gun.png` as its edit reference, matching the existing ring,
 green base, gold coin, transparent outline, and full-size UI layout.
 Used only by the Laser selection button in the three levels.

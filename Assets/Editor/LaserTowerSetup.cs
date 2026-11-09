@@ -227,8 +227,7 @@ namespace TowerDefence.EditorTools
                 range.enabled = false;
                 var audio = root.GetComponent<AudioSource>();
                 audio.playOnAwake = false;
-                foreach (var sprite in root.GetComponentsInChildren<SpriteRenderer>())
-                    sprite.color = new Color(0.25f, 1, 0.85f);
+                EgyptTowerArt.ApplyLaserSprites(root);
                 const string materialPath = "Assets/Materials/LaserBeam.mat";
                 var material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
                 if (material == null)

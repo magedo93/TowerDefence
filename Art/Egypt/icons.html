@@ -1,0 +1,117 @@
+<!doctype html>
+<!--
+  Egyptian-theme build-button icons, original vector art for Tower Defence.
+  Rendered by Tools/Art/build-egypt-art.ps1 (headless Edge) and saved over the existing
+  files, keeping their pixel sizes and GUIDs:
+    Assets/Sprites/gun.png (165x140)  - cannon tower
+    Assets/Sprites/rocket.png (165x140) - rocket tower
+    Assets/Sprites/Towers/LaserEmitter.png (1362x1155) - laser tower
+  Same layout as the originals: round frame, side view of the tower with its weapon pointing
+  right, gold coin (it costs money) at the lower left.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { display: flex; width: 4086px; height: 1155px; }
+  svg { width: 1362px; height: 1155px; flex: none; display: block; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0">
+  <defs>
+    <clipPath id="inside"><circle cx="640" cy="580" r="470"/></clipPath>
+    <!-- Frame and backdrop: lapis night sky, sun, dune. -->
+    <g id="frame">
+      <circle cx="640" cy="580" r="510" fill="#4a3018"/>
+      <circle cx="640" cy="580" r="470" fill="#1f3f7a"/>
+      <g clip-path="url(#inside)">
+        <circle cx="900" cy="300" r="120" fill="#e8b83f" opacity="0.9"/>
+        <path d="M100,860 C360,760 640,800 1200,740 L1200,1100 L100,1100 Z" fill="#c9a46b"/>
+      </g>
+      <circle cx="640" cy="580" r="490" fill="none" stroke="#e8b83f" stroke-width="22" stroke-dasharray="44 30"/>
+    </g>
+    <!-- Sandstone tower block (side view). -->
+    <g id="block">
+      <g clip-path="url(#inside)">
+        <path d="M330,1120 L380,740 L900,740 L950,1120 Z" fill="#d8b77e" stroke="#5e4224" stroke-width="24" stroke-linejoin="round"/>
+        <path d="M380,740 L900,740 L912,830 L368,830 Z" fill="#f0d9a8"/>
+        <rect x="360" y="880" width="560" height="34" fill="#2d5fa8"/>
+      </g>
+    </g>
+    <!-- Gold coin, lower left. -->
+    <g id="coin">
+      <circle cx="230" cy="910" r="200" fill="#6e6236"/>
+      <circle cx="230" cy="910" r="160" fill="#efc21a"/>
+      <path d="M150,790 L330,1010 M200,770 L360,960" stroke="#f7dd5a" stroke-width="30" stroke-linecap="round"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- gun.png: cannon tower -->
+<svg viewBox="0 0 1362 1155" xmlns="http://www.w3.org/2000/svg">
+  <use href="#frame"/>
+  <use href="#block"/>
+  <!-- barrel -->
+  <path d="M760,470 L1190,400 L1210,540 L780,610 Z" fill="#b5803a" stroke="#4a2e12" stroke-width="26" stroke-linejoin="round"/>
+  <path d="M800,500 L1180,440" stroke="#e0aa55" stroke-width="26" stroke-linecap="round"/>
+  <rect x="1160" y="370" width="110" height="200" rx="26" fill="#e8b83f" stroke="#4a2e12" stroke-width="26" transform="rotate(-9 1215 470)"/>
+  <!-- turret -->
+  <path d="M410,760 L410,520 C410,380 520,330 640,330 C760,330 870,380 870,520 L870,760 Z" fill="#d8b77e" stroke="#5e4224" stroke-width="26" stroke-linejoin="round"/>
+  <path d="M450,520 C450,410 530,370 600,368" fill="none" stroke="#f6e3bb" stroke-width="30" stroke-linecap="round"/>
+  <rect x="410" y="610" width="460" height="44" fill="#2d5fa8"/>
+  <rect x="410" y="610" width="460" height="44" fill="none" stroke="#e8b83f" stroke-width="16" stroke-dasharray="40 40"/>
+  <path d="M520,500 Q640,420 760,500 Q640,560 520,500 Z" fill="#f6ecd6" stroke="#2a1a0a" stroke-width="20"/>
+  <circle cx="640" cy="495" r="34" fill="#2a1a0a"/>
+  <path d="M610,545 L590,600 M680,545 C700,580 735,585 750,565" fill="none" stroke="#2a1a0a" stroke-width="20" stroke-linecap="round"/>
+  <use href="#coin"/>
+</svg>
+
+<!-- rocket.png: rocket tower -->
+<svg viewBox="0 0 1362 1155" xmlns="http://www.w3.org/2000/svg">
+  <use href="#frame"/>
+  <use href="#block"/>
+  <!-- launcher -->
+  <path d="M400,760 L400,470 L900,470 L900,760 Z" fill="#d8b77e" stroke="#5e4224" stroke-width="26" stroke-linejoin="round"/>
+  <rect x="400" y="600" width="500" height="40" fill="#2d5fa8"/>
+  <g transform="rotate(-24 700 520)">
+    <rect x="520" y="420" width="420" height="190" rx="30" fill="#8a6638" stroke="#2a1a0a" stroke-width="24"/>
+    <circle cx="930" cy="515" r="70" fill="#3a2614" stroke="#2a1a0a" stroke-width="20"/>
+    <!-- obelisk rocket leaving the tube -->
+    <path d="M960,470 L1180,470 L1180,560 L960,560 Z" fill="#e2c28a" stroke="#5e4224" stroke-width="22" stroke-linejoin="round"/>
+    <path d="M1180,462 L1290,515 L1180,568 Z" fill="#e8b83f" stroke="#5a3d14" stroke-width="22" stroke-linejoin="round"/>
+    <path d="M990,470 L940,410 L1030,470 Z M990,560 L940,620 L1030,560 Z" fill="#c4392b" stroke="#5a1a12" stroke-width="16" stroke-linejoin="round"/>
+    <g fill="#2d5fa8"><rect x="1040" y="500" width="24" height="30"/><rect x="1100" y="500" width="24" height="30"/></g>
+  </g>
+  <!-- ankh on the launcher -->
+  <path transform="translate(520 540) scale(1.5)" d="M0,-46 C-20,-46 -26,-20 -8,-6 L-30,-6 L-30,6 L-6,6 L-6,46 L6,46 L6,6 L30,6 L30,-6 L8,-6 C26,-20 20,-46 0,-46 Z M0,-34 C10,-34 10,-16 0,-10 C-10,-16 -10,-34 0,-34 Z" fill="#e8b83f" fill-rule="evenodd" stroke="#6b4a1c" stroke-width="5"/>
+  <use href="#coin"/>
+</svg>
+
+<!-- LaserEmitter.png: laser tower -->
+<svg viewBox="0 0 1362 1155" xmlns="http://www.w3.org/2000/svg">
+  <use href="#frame"/>
+  <use href="#block"/>
+  <rect x="360" y="880" width="560" height="34" fill="#2fc4b2" clip-path="url(#inside)"/>
+  <!-- gold focusing rails and crystal lens -->
+  <g stroke="#4a2e12" stroke-width="24" stroke-linejoin="round">
+    <path d="M760,420 L1150,400 L1150,460 L760,500 Z" fill="#e8b83f"/>
+    <path d="M760,600 L1150,560 L1150,620 L760,680 Z" fill="#e8b83f"/>
+  </g>
+  <path d="M780,500 L1150,470 L1150,550 L780,600 Z" fill="#2fc4b2" opacity="0.6"/>
+  <circle cx="1180" cy="510" r="100" fill="#2fc4b2" stroke="#0f4a45" stroke-width="26"/>
+  <circle cx="1180" cy="510" r="56" fill="#a8fff2"/>
+  <circle cx="1155" cy="485" r="20" fill="#ffffff"/>
+  <!-- turret with sun disc of Ra -->
+  <path d="M410,760 L410,520 C410,380 520,330 640,330 C760,330 870,380 870,520 L870,760 Z" fill="#d8b77e" stroke="#5e4224" stroke-width="26" stroke-linejoin="round"/>
+  <path d="M450,520 C450,410 530,370 600,368" fill="none" stroke="#f6e3bb" stroke-width="30" stroke-linecap="round"/>
+  <rect x="410" y="640" width="460" height="44" fill="#2fc4b2"/>
+  <rect x="410" y="640" width="460" height="44" fill="none" stroke="#e8b83f" stroke-width="16" stroke-dasharray="40 40"/>
+  <circle cx="640" cy="500" r="96" fill="#1f3f7a" stroke="#5e4224" stroke-width="20"/>
+  <circle cx="640" cy="500" r="58" fill="#e8b83f" stroke="#5a3d14" stroke-width="14"/>
+  <circle cx="640" cy="500" r="26" fill="#f6d77a"/>
+  <use href="#coin"/>
+</svg>
+</body>
+</html>

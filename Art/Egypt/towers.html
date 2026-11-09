@@ -1,0 +1,139 @@
+<!doctype html>
+<!--
+  Egyptian-theme towers, original vector art for Tower Defence.
+  Rendered by Tools/Art/build-egypt-art.ps1 (headless Edge, 512 px per cell, downscaled to 64)
+  into tile-sheet cells, in this order:
+    180 tower base     - sandstone platform (shared by all towers; the laser tower tints it)
+    249 cannon turret  - sandstone turret with a bronze barrel (also the laser tower's gun)
+    229 rocket turret  - sandstone launcher with twin tubes and an ankh
+    275 cannon ball    - gold sun-disc shot
+    251 rocket         - obelisk dart with a gold pyramidion and red fins
+    182 laser base     - base with turquoise faience and lapis (was an unused palette cell)
+    250 laser emitter  - gold focusing rails, turquoise lens 25 px forward, sun disc of Ra
+  Top-down. Guns and projectiles point UP (+y): TowerScript aims the gun's transform.up.
+  The pivot is the cell centre, so turrets rotate around (256,256).
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { display: flex; width: 3584px; height: 512px; }
+  svg { width: 512px; height: 512px; flex: none; display: block; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0">
+  <defs>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
+    <path id="ankh" d="M0,-46 C-20,-46 -26,-20 -8,-6 L-30,-6 L-30,6 L-6,6 L-6,46 L6,46 L6,6 L30,6 L30,-6 L8,-6 C26,-20 20,-46 0,-46 Z M0,-34 C10,-34 10,-16 0,-10 C-10,-16 -10,-34 0,-34 Z" fill-rule="evenodd"/>
+  </defs>
+</svg>
+
+<!-- 180: tower base -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <path d="M84,40 L428,40 L472,84 L472,428 L428,472 L84,472 L40,428 L40,84 Z" fill="#9c7444" stroke="#5e4224" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M96,64 L416,64 L448,96 L448,416 L416,448 L96,448 L64,416 L64,96 Z" fill="#e2c28a"/>
+  <path d="M64,96 L96,64 L416,64 L448,96 L424,104 L104,104 Z" fill="#f0d9a8"/>
+  <path d="M448,96 L448,416 L416,448 L408,424 L424,104 Z" fill="#c9a46b"/>
+  <path d="M96,448 L416,448 L408,424 L104,424 Z" fill="#b8925a"/>
+  <rect x="120" y="120" width="272" height="272" rx="10" fill="#c9a46b" stroke="#8a6638" stroke-width="8"/>
+  <rect x="140" y="140" width="232" height="232" rx="6" fill="none" stroke="#2d5fa8" stroke-width="12"/>
+  <rect x="140" y="140" width="232" height="232" rx="6" fill="none" stroke="#e8b83f" stroke-width="12" stroke-dasharray="24 24"/>
+  <g fill="#e8b83f" stroke="#6b4a1c" stroke-width="5"><circle cx="96" cy="96" r="14"/><circle cx="416" cy="96" r="14"/><circle cx="96" cy="416" r="14"/><circle cx="416" cy="416" r="14"/></g>
+</svg>
+
+<!-- 249: cannon turret (barrel up) -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="272" cy="318" rx="128" ry="122" fill="#000" opacity="0.25" filter="url(#soft)"/>
+  <!-- barrel -->
+  <rect x="226" y="52" width="60" height="200" rx="10" fill="#b5803a" stroke="#4a2e12" stroke-width="10"/>
+  <rect x="240" y="64" width="14" height="176" rx="7" fill="#e0aa55"/>
+  <rect x="214" y="30" width="84" height="44" rx="12" fill="#e8b83f" stroke="#4a2e12" stroke-width="10"/>
+  <rect x="218" y="150" width="76" height="20" rx="6" fill="#2d5fa8" stroke="#4a2e12" stroke-width="6"/>
+  <!-- turret -->
+  <circle cx="256" cy="304" r="118" fill="#d8b77e" stroke="#5e4224" stroke-width="12"/>
+  <circle cx="256" cy="304" r="92" fill="none" stroke="#2d5fa8" stroke-width="14"/>
+  <circle cx="256" cy="304" r="92" fill="none" stroke="#e8b83f" stroke-width="14" stroke-dasharray="20 18"/>
+  <circle cx="256" cy="304" r="64" fill="#e9cd97"/>
+  <path d="M212,280 A64,64 0 0 1 300,272" fill="none" stroke="#f6e3bb" stroke-width="12" stroke-linecap="round"/>
+  <!-- eye of Horus on the hatch -->
+  <path d="M214,306 Q256,270 298,306 Q256,330 214,306 Z" fill="#f6ecd6" stroke="#2a1a0a" stroke-width="8"/>
+  <circle cx="256" cy="304" r="14" fill="#2a1a0a"/>
+  <path d="M246,322 L238,350 M268,322 C276,338 290,340 296,330" fill="none" stroke="#2a1a0a" stroke-width="8" stroke-linecap="round"/>
+</svg>
+
+<!-- 229: rocket turret (tubes up) -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <path d="M128,128 L384,128 L408,152 L408,392 L352,448 L160,448 L104,392 L104,152 Z" fill="#000" opacity="0.25" filter="url(#soft)" transform="translate(14 16)"/>
+  <path d="M128,108 L384,108 L408,132 L408,372 L352,428 L160,428 L104,372 L104,132 Z" fill="#d8b77e" stroke="#5e4224" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M128,108 L384,108 L408,132 L392,146 L120,146 L104,132 Z" fill="#f0d9a8"/>
+  <!-- two launch tubes -->
+  <g stroke="#2a1a0a" stroke-width="10">
+    <rect x="148" y="70" width="80" height="230" rx="12" fill="#8a6638"/>
+    <rect x="284" y="70" width="80" height="230" rx="12" fill="#8a6638"/>
+  </g>
+  <g fill="#3a2614"><rect x="166" y="82" width="44" height="90" rx="10"/><rect x="302" y="82" width="44" height="90" rx="10"/></g>
+  <g fill="#e8b83f" stroke="#2a1a0a" stroke-width="6"><rect x="144" y="196" width="88" height="18" rx="5"/><rect x="280" y="196" width="88" height="18" rx="5"/></g>
+  <rect x="140" y="318" width="232" height="16" fill="#2d5fa8"/>
+  <use href="#ankh" transform="translate(256 380) scale(0.8)" fill="#e8b83f" stroke="#6b4a1c" stroke-width="5"/>
+</svg>
+
+<!-- 275: cannon ball -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="256" cy="256" r="58" fill="#e8b83f" stroke="#5a3d14" stroke-width="12"/>
+  <circle cx="256" cy="256" r="30" fill="#f6d77a"/>
+  <circle cx="240" cy="238" r="12" fill="#fff7dd"/>
+</svg>
+
+<!-- 251: rocket (nose up) -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- fins and flame tail -->
+  <path d="M232,352 L196,410 L232,400 Z M280,352 L316,410 L280,400 Z" fill="#c4392b" stroke="#5a1a12" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M240,400 L256,452 L272,400 Z" fill="#f29a2e"/>
+  <!-- obelisk shaft -->
+  <path d="M234,150 L278,150 L282,404 L230,404 Z" fill="#e2c28a" stroke="#5e4224" stroke-width="9" stroke-linejoin="round"/>
+  <rect x="244" y="168" width="8" height="220" fill="#f6e3bb"/>
+  <g fill="#2d5fa8"><rect x="246" y="200" width="20" height="8"/><rect x="246" y="240" width="20" height="8"/><rect x="246" y="280" width="20" height="8"/></g>
+  <!-- gold pyramidion -->
+  <path d="M232,152 L256,84 L280,152 Z" fill="#e8b83f" stroke="#5a3d14" stroke-width="9" stroke-linejoin="round"/>
+</svg>
+
+<!-- 182: laser tower base - sandstone with turquoise faience and a lapis centre -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <path d="M84,40 L428,40 L472,84 L472,428 L428,472 L84,472 L40,428 L40,84 Z" fill="#9c7444" stroke="#5e4224" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M96,64 L416,64 L448,96 L448,416 L416,448 L96,448 L64,416 L64,96 Z" fill="#e2c28a"/>
+  <path d="M64,96 L96,64 L416,64 L448,96 L424,104 L104,104 Z" fill="#f0d9a8"/>
+  <path d="M448,96 L448,416 L416,448 L408,424 L424,104 Z" fill="#c9a46b"/>
+  <path d="M96,448 L416,448 L408,424 L104,424 Z" fill="#b8925a"/>
+  <rect x="120" y="120" width="272" height="272" rx="10" fill="#1f3f7a" stroke="#8a6638" stroke-width="8"/>
+  <rect x="140" y="140" width="232" height="232" rx="6" fill="none" stroke="#2fc4b2" stroke-width="12"/>
+  <rect x="140" y="140" width="232" height="232" rx="6" fill="none" stroke="#e8b83f" stroke-width="12" stroke-dasharray="24 24"/>
+  <g fill="#2fc4b2" stroke="#145e57" stroke-width="5"><circle cx="96" cy="96" r="14"/><circle cx="416" cy="96" r="14"/><circle cx="96" cy="416" r="14"/><circle cx="416" cy="416" r="14"/></g>
+</svg>
+
+<!-- 250: laser emitter (lens up, centred 25 px = 200 units forward: LaserTower muzzleOffset) -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="272" cy="318" rx="124" ry="118" fill="#000" opacity="0.25" filter="url(#soft)"/>
+  <!-- twin gold focusing rails -->
+  <g stroke="#4a2e12" stroke-width="10" stroke-linejoin="round">
+    <path d="M206,250 L222,78 L246,78 L240,250 Z" fill="#e8b83f"/>
+    <path d="M306,250 L290,78 L266,78 L272,250 Z" fill="#e8b83f"/>
+  </g>
+  <rect x="236" y="96" width="40" height="150" fill="#2fc4b2" opacity="0.55"/>
+  <!-- crystal lens -->
+  <circle cx="256" cy="56" r="40" fill="#2fc4b2" stroke="#0f4a45" stroke-width="10"/>
+  <circle cx="256" cy="56" r="22" fill="#a8fff2"/>
+  <circle cx="246" cy="46" r="8" fill="#ffffff"/>
+  <!-- turret -->
+  <circle cx="256" cy="304" r="118" fill="#d8b77e" stroke="#5e4224" stroke-width="12"/>
+  <circle cx="256" cy="304" r="92" fill="none" stroke="#2fc4b2" stroke-width="14"/>
+  <circle cx="256" cy="304" r="92" fill="none" stroke="#e8b83f" stroke-width="14" stroke-dasharray="20 18"/>
+  <circle cx="256" cy="304" r="64" fill="#1f3f7a"/>
+  <!-- sun disc of Ra with uraeus -->
+  <circle cx="256" cy="304" r="34" fill="#e8b83f" stroke="#5a3d14" stroke-width="7"/>
+  <circle cx="256" cy="304" r="16" fill="#f6d77a"/>
+  <path d="M212,280 A64,64 0 0 1 300,272" fill="none" stroke="#4f7fc8" stroke-width="10" stroke-linecap="round"/>
+</svg>
+</body>
+</html>
