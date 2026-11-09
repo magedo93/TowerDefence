@@ -1,0 +1,156 @@
+<!doctype html>
+<!--
+  Egyptian-theme enemies, original vector art for Tower Defence.
+  Rendered by Tools/Art/build-egypt-art.ps1 (headless Edge, 512 px per cell, downscaled to 64)
+  into tile-sheet cells, in this order:
+    245 soldier      - spearman with nemes headdress, hide shield and khopesh
+    268 tank body    - war chariot pulled by two plumed horses
+    291 tank cannon  - charioteer archer (overlay; the prefab places it 4.3 px forward)
+    271 plane        - Horus falcon with banded wings
+    294 plane shadow - falcon silhouette, black at 20% (same as the original shadow)
+  Top-down, facing +x (right), light from the top-left like the rest of the sheet.
+  Footprints match the originals so colliders and gameplay stay the same.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { display: flex; width: 2560px; height: 512px; }
+  svg { width: 512px; height: 512px; flex: none; display: block; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0">
+  <defs>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
+    <!-- Wide stripes so they still read at 64 px. -->
+    <pattern id="nemes" width="512" height="26" patternUnits="userSpaceOnUse" patternTransform="translate(0 6)">
+      <rect width="512" height="26" fill="#e8b83f"/><rect y="13" width="512" height="13" fill="#2d5fa8"/>
+    </pattern>
+    <!-- Nemes headdress seen from above, centred at the origin, face towards +x. -->
+    <g id="head">
+      <path d="M-30,-36 L-82,-30 L-90,0 L-82,30 L-30,36 Z" fill="url(#nemes)" stroke="#5a3d14" stroke-width="7" stroke-linejoin="round"/>
+      <circle r="46" fill="url(#nemes)" stroke="#5a3d14" stroke-width="7"/>
+      <path d="M26,-34 A46,46 0 0 1 26,34 A24,38 0 0 0 26,-34 Z" fill="#9a5e34"/>
+      <circle cx="38" cy="0" r="8" fill="#e8b83f" stroke="#5a3d14" stroke-width="4"/>
+    </g>
+    <!-- Bare shoulders with a gold collar. -->
+    <g id="torso">
+      <ellipse rx="54" ry="90" fill="#a8693c" stroke="#5e3218" stroke-width="7"/>
+      <ellipse rx="40" ry="68" fill="none" stroke="#e8b83f" stroke-width="16"/>
+      <ellipse rx="40" ry="68" fill="none" stroke="#2d5fa8" stroke-width="5"/>
+    </g>
+    <!-- Falcon, centred on (256,256), facing +x. -->
+    <path id="wing" d="M318,236 C306,150 276,78 246,22 L222,34 L208,62 L192,92 L178,124 L166,158 L158,196 L156,224 C210,228 266,232 318,236 Z"/>
+    <path id="tail" d="M196,232 L78,206 L62,232 L58,256 L62,280 L78,306 L196,280 Z"/>
+    <g id="falconShape">
+      <use href="#wing"/><use href="#wing" transform="translate(0 512) scale(1 -1)"/>
+      <use href="#tail"/>
+      <ellipse cx="270" cy="256" rx="112" ry="46"/>
+      <circle cx="392" cy="256" r="38"/>
+      <path d="M420,234 L476,256 L420,278 Z"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- 245: soldier -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="266" cy="268" rx="96" ry="112" fill="#000" opacity="0.22" filter="url(#soft)"/>
+  <!-- khopesh in the right hand (bottom side) -->
+  <rect x="262" y="318" width="56" height="18" rx="9" fill="#4a2e14"/>
+  <path d="M312,314 C350,298 396,312 394,356 C382,334 356,330 316,342 Z" fill="#d9ad4c" stroke="#6b4a1c" stroke-width="8" stroke-linejoin="round"/>
+  <ellipse cx="280" cy="326" rx="36" ry="22" fill="#a8693c" stroke="#5e3218" stroke-width="7"/>
+  <!-- hide shield in the left hand (top side) -->
+  <ellipse cx="278" cy="186" rx="32" ry="22" fill="#a8693c" stroke="#5e3218" stroke-width="7"/>
+  <rect x="290" y="124" width="44" height="128" rx="20" fill="#8a5a2b" stroke="#3d2712" stroke-width="8"/>
+  <g fill="#efe1c0"><circle cx="310" cy="152" r="9"/><circle cx="314" cy="192" r="11"/><circle cx="308" cy="228" r="8"/></g>
+  <use href="#torso" transform="translate(244 256)"/>
+  <use href="#head" transform="translate(256 256)"/>
+</svg>
+
+<!-- 268: war chariot (body) -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="290" cy="270" rx="214" ry="170" fill="#000" opacity="0.2" filter="url(#soft)"/>
+  <!-- wheels and axle -->
+  <rect x="164" y="104" width="22" height="304" fill="#5b3a1e"/>
+  <g fill="#6e4723" stroke="#3d2712" stroke-width="6">
+    <rect x="112" y="88" width="126" height="30" rx="15"/><rect x="112" y="394" width="126" height="30" rx="15"/>
+  </g>
+  <g stroke="#3d2712" stroke-width="5"><path d="M144,90 V116 M175,90 V116 M206,90 V116 M144,396 V422 M175,396 V422 M206,396 V422"/></g>
+  <!-- pole and yoke -->
+  <rect x="250" y="248" width="164" height="16" rx="8" fill="#6e4723" stroke="#3d2712" stroke-width="4"/>
+  <rect x="380" y="150" width="20" height="212" rx="10" fill="#c08a3e" stroke="#6e4723" stroke-width="5"/>
+  <!-- horses -->
+  <g id="horseA" transform="translate(0 -62)">
+    <ellipse cx="380" cy="256" rx="76" ry="34" fill="#9a5a34" stroke="#5e3218" stroke-width="5"/>
+    <ellipse cx="462" cy="256" rx="42" ry="21" fill="#9a5a34" stroke="#5e3218" stroke-width="5"/>
+    <path d="M320,256 L470,256" stroke="#3a2010" stroke-width="10" stroke-linecap="round"/>
+    <rect x="352" y="224" width="34" height="64" rx="8" fill="#2d5fa8" stroke="#1d3c6b" stroke-width="4"/>
+    <path d="M478,256 L500,256" stroke="#efe1c0" stroke-width="8" stroke-linecap="round"/><circle cx="446" cy="256" r="12" fill="#b8432f"/><circle cx="446" cy="256" r="5" fill="#e2b23f"/>
+    <path d="M304,256 L284,244 L282,268 Z" fill="#3a2010"/>
+  </g>
+  <g transform="translate(0 62)">
+    <ellipse cx="380" cy="256" rx="76" ry="34" fill="#6a3c20" stroke="#3a2010" stroke-width="5"/>
+    <ellipse cx="462" cy="256" rx="42" ry="21" fill="#6a3c20" stroke="#3a2010" stroke-width="5"/>
+    <path d="M320,256 L470,256" stroke="#24120a" stroke-width="10" stroke-linecap="round"/>
+    <rect x="352" y="224" width="34" height="64" rx="8" fill="#b8432f" stroke="#6e2318" stroke-width="4"/>
+    <path d="M478,256 L500,256" stroke="#efe1c0" stroke-width="8" stroke-linecap="round"/><circle cx="446" cy="256" r="12" fill="#2d5fa8"/><circle cx="446" cy="256" r="5" fill="#e2b23f"/>
+    <path d="M304,256 L284,244 L282,268 Z" fill="#24120a"/>
+  </g>
+  <!-- cab: gilded D-shaped car, open at the back -->
+  <path d="M96,150 L196,150 C252,150 282,200 282,256 C282,312 252,362 196,362 L96,362 Z" fill="#c9923e" stroke="#6e4723" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M110,170 L192,170 C238,170 260,212 260,256 C260,300 238,342 192,342 L110,342 Z" fill="#8a5a2b"/>
+  <path d="M196,150 C252,150 282,200 282,256 C282,312 252,362 196,362" fill="none" stroke="#b8432f" stroke-width="8"/>
+  <g fill="#f0c95a"><circle cx="232" cy="168" r="6"/><circle cx="268" cy="214" r="6"/><circle cx="274" cy="256" r="6"/><circle cx="268" cy="298" r="6"/><circle cx="232" cy="344" r="6"/></g>
+</svg>
+
+<!-- 291: charioteer archer (overlay, drawn 34 units back to undo the prefab's 4.3 px offset) -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(-118 0)">
+    <!-- bow and arrow -->
+    <path d="M300,176 Q360,256 300,336" fill="none" stroke="#2a170a" stroke-width="16" stroke-linecap="round"/>
+    <path d="M300,176 L262,256 L300,336" fill="none" stroke="#efe6cf" stroke-width="3"/>
+    <path d="M262,256 L372,256" stroke="#7a5a22" stroke-width="6"/>
+    <path d="M384,256 L364,246 L364,266 Z" fill="#9aa3a6"/>
+    <ellipse cx="290" cy="226" rx="44" ry="14" fill="#a8693c" stroke="#6e4220" stroke-width="5" transform="rotate(30 290 226)"/>
+    <ellipse cx="282" cy="286" rx="36" ry="14" fill="#a8693c" stroke="#6e4220" stroke-width="5" transform="rotate(-20 282 286)"/>
+    <use href="#torso" transform="translate(250 256) scale(0.8)"/>
+    <!-- blue khepresh war crown with gold discs -->
+    <circle cx="256" cy="256" r="34" fill="#2d5fa8" stroke="#16325e" stroke-width="5"/>
+    <path d="M222,256 C222,236 236,224 256,222" fill="none" stroke="#4f86d0" stroke-width="7" stroke-linecap="round"/>
+    <g fill="#e2b23f"><circle cx="246" cy="244" r="4"/><circle cx="262" cy="240" r="4"/><circle cx="244" cy="268" r="4"/><circle cx="262" cy="272" r="4"/><circle cx="234" cy="256" r="4"/></g>
+    <path d="M282,250 L296,256 L282,262 Z" fill="#e2b23f" stroke="#6b4a1c" stroke-width="3"/>
+  </g>
+</svg>
+
+<!-- 271: Horus falcon -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#3d2712" stroke-width="6" stroke-linejoin="round">
+    <g fill="#6e4723"><use href="#wing"/><use href="#wing" transform="translate(0 512) scale(1 -1)"/><use href="#tail"/></g>
+  </g>
+  <!-- Egyptian banded feathers: blue, then gold coverts near the body -->
+  <g fill="#2d5fa8"><use href="#wing" transform="translate(318 236) scale(0.72) translate(-318 -236)"/>
+    <use href="#wing" transform="translate(0 512) scale(1 -1) translate(318 236) scale(0.72) translate(-318 -236)"/>
+    <use href="#tail" transform="translate(196 256) scale(0.62) translate(-196 -256)"/></g>
+  <g fill="#e2b23f"><use href="#wing" transform="translate(318 236) scale(0.46) translate(-318 -236)"/>
+    <use href="#wing" transform="translate(0 512) scale(1 -1) translate(318 236) scale(0.46) translate(-318 -236)"/></g>
+  <g stroke="#3d2712" stroke-width="4" opacity="0.55"><path d="M246,22 L292,232 M208,62 L282,230 M178,124 L270,230 M246,490 L292,280 M208,450 L282,282 M178,388 L270,282"/></g>
+  <ellipse cx="270" cy="256" rx="112" ry="46" fill="#8a5a2b" stroke="#3d2712" stroke-width="6"/>
+  <ellipse cx="300" cy="256" rx="70" ry="28" fill="#c9923e"/>
+  <g fill="#6e4723"><path d="M250,246 l12,10 l-12,10 Z M280,246 l12,10 l-12,10 Z M310,246 l12,10 l-12,10 Z"/></g>
+  <path d="M420,234 L476,256 L420,278 Z" fill="#e2b23f" stroke="#6b4a1c" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M458,249 L476,256 L458,263 Z" fill="#3a2a1a"/>
+  <circle cx="392" cy="256" r="38" fill="#5e3a1c" stroke="#3d2712" stroke-width="6"/>
+  <!-- eyes of Horus with the falcon's tear-mark, one on each side of the head -->
+  <g fill="#efe6cf"><ellipse cx="404" cy="232" rx="13" ry="8"/><ellipse cx="404" cy="280" rx="13" ry="8"/></g>
+  <g fill="#111"><circle cx="408" cy="232" r="5"/><circle cx="408" cy="280" r="5"/>
+    <path d="M396,226 L376,214 L372,220 Z M396,286 L376,298 L372,292 Z"/></g>
+</svg>
+
+<!-- 294: falcon shadow -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <use href="#falconShape" fill="#000" opacity="0.2"/>
+</svg>
+</body>
+</html>

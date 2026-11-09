@@ -2,7 +2,7 @@
 .SYNOPSIS
 Builds the Egyptian-theme art from sources; no Unity needed (Windows PowerShell 5.1).
 .DESCRIPTION
-Phase 1 (map):
+Phase 1 (map) and phase 2 (enemies, cells 245/268/291/271/294 from Art/Egypt/enemies.html):
   * Recolors the terrain cells of the original Kenney sheet (Art/Source/) into the
     Egyptian palette (Tools/Art/EgyptTerrain.cs).
   * Draws the decoration cells (130-137) from Art/Egypt/decorations.html (vector art,
@@ -66,7 +66,29 @@ if (Test-Path $decorationsPage) {
         $src = New-Object System.Drawing.Rectangle ($i * 64 * $scale), 0, (64 * $scale), (64 * $scale)
         $g.DrawImage($big, $dest, $src, [System.Drawing.GraphicsUnit]::Pixel)
     }
-    $g.Dispose(); $big.Dispose()
+    $big.Dispose()
+
+    # 2b. Enemies (phase 2): Art/Egypt/enemies.html, one 512 px slot per cell, same downscale.
+    $enemiesPage = Join-Path $root 'Art/Egypt/enemies.html'
+    if (Test-Path $enemiesPage) {
+        $enemyCells = @(245, 268, 291, 271, 294)  # soldier, tank body, tank cannon, plane, plane shadow
+        $shot = Join-Path $work 'enemies.png'
+        $edgeArgs = @('--headless', '--disable-gpu', '--hide-scrollbars', '--default-background-color=00000000',
+                      "--window-size=$(64 * $scale * $enemyCells.Count),$(64 * $scale)", "--screenshot=$shot",
+                      "--user-data-dir=$(Join-Path $work 'edge-profile3')", ('file:///' + ($enemiesPage -replace '\\', '/')))
+        $p = Start-Process -FilePath $Edge -ArgumentList $edgeArgs -PassThru -Wait -WindowStyle Hidden
+        if (-not (Test-Path $shot)) { throw "Edge did not produce $shot (exit $($p.ExitCode))." }
+        $big = New-Object System.Drawing.Bitmap $shot
+        for ($i = 0; $i -lt $enemyCells.Count; $i++) {
+            $cell = $enemyCells[$i]
+            $dest = New-Object System.Drawing.Rectangle (($cell % 23) * 64), ([math]::Floor($cell / 23) * 64), 64, 64
+            $src = New-Object System.Drawing.Rectangle ($i * 64 * $scale), 0, (64 * $scale), (64 * $scale)
+            $g.DrawImage($big, $dest, $src, [System.Drawing.GraphicsUnit]::Pixel)
+        }
+        $big.Dispose()
+        Write-Output "Enemies drawn: $($enemyCells.Count)"
+    }
+    $g.Dispose()
     $final = Join-Path $work 'final.png'
     $sheet.Save($final, [System.Drawing.Imaging.ImageFormat]::Png); $sheet.Dispose()
     Copy-Item $final $Output -Force
