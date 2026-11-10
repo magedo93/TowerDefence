@@ -24,9 +24,9 @@ MonoBehaviour:
     range: 300
     upgradeCost: 6
     beamWidth: 7
-    beamColor: {r: 0.15, g: 1, b: 0.85, a: 1}
+    beamColor: {r: 0.78, g: 1, b: 0.96, a: 1}
   - damagePerSecond: 5
     range: 350
     upgradeCost: 9
     beamWidth: 9
-    beamColor: {r: 0.15, g: 1, b: 0.85, a: 1}
+    beamColor: {r: 1, g: 0.8, b: 0.27, a: 1}

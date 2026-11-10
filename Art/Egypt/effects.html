@@ -1,0 +1,48 @@
+<!doctype html>
+<!--
+  Egyptian-theme effects, original vector art for Tower Defence.
+  Rendered by Tools/Art/build-egypt-art.ps1 (headless Edge, one 512 px slot each), in order:
+    0 sheet cell 21 - soldier death mark (Blood.prefab): a sand burst with a few dark drops
+                      instead of the pink Kenney splat
+    1 DustCloud.png (256x256) - soft white cloud for the explosion's dust particles; the
+                      particle system tints it sand coloured
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { display: flex; width: 1024px; height: 512px; }
+  svg { width: 512px; height: 512px; flex: none; display: block; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0">
+  <defs>
+    <filter id="blur6" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="blur30" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30"/></filter>
+  </defs>
+</svg>
+
+<!-- 0: sand burst -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <g opacity="0.85">
+    <path d="M256,96 L286,190 L380,140 L330,226 L432,256 L330,286 L380,372 L286,322 L256,416 L226,322 L132,372 L182,286 L80,256 L182,226 L132,140 L226,190 Z" fill="#c9a46b" filter="url(#blur6)"/>
+    <circle cx="256" cy="256" r="96" fill="#b58a4f" filter="url(#blur6)"/>
+    <circle cx="256" cy="256" r="58" fill="#9c7444" opacity="0.8" filter="url(#blur6)"/>
+  </g>
+  <!-- grit -->
+  <g fill="#8a6638"><circle cx="150" cy="190" r="10"/><circle cx="372" cy="208" r="8"/><circle cx="330" cy="370" r="11"/><circle cx="168" cy="344" r="7"/><circle cx="420" cy="300" r="6"/><circle cx="104" cy="270" r="6"/></g>
+  <!-- a few dark-red drops -->
+  <g fill="#7a1f16" opacity="0.85"><ellipse cx="236" cy="236" rx="22" ry="16"/><ellipse cx="288" cy="282" rx="16" ry="12"/><circle cx="300" cy="226" r="9"/><circle cx="214" cy="292" r="7"/></g>
+</svg>
+
+<!-- 1: dust cloud texture (white, soft alpha edge) -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#ffffff" filter="url(#blur30)">
+    <circle cx="256" cy="256" r="150"/>
+    <circle cx="180" cy="220" r="90"/><circle cx="330" cy="210" r="100"/><circle cx="300" cy="320" r="95"/><circle cx="200" cy="310" r="85"/>
+  </g>
+</svg>
+</body>
+</html>

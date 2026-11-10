@@ -4,7 +4,7 @@ Builds the Egyptian-theme art from sources; no Unity needed (Windows PowerShell 
 .DESCRIPTION
 Phase 1 (map), phase 2 (enemies: Art/Egypt/enemies.html) and phase 3 (towers: Art/Egypt/towers.html
 for sheet cells, Art/Egypt/icons.html for the build-button icons) and phase 4 (UI: Art/Egypt/ui-icons.html,
-Art/Egypt/menu-background.html):
+Art/Egypt/menu-background.html) and phase 5 (effects: Art/Egypt/effects.html):
   * Recolors the terrain cells of the original Kenney sheet (Art/Source/) into the
     Egyptian palette (Tools/Art/EgyptTerrain.cs).
   * Draws the decoration cells (130-137) from Art/Egypt/decorations.html (vector art,
@@ -22,6 +22,7 @@ param(
     [string]$LandmarksDir,
     [string]$IconsDir,
     [string]$UiDir,
+    [string]$FxDir,
     [string]$Edge
 )
 
@@ -88,7 +89,8 @@ if (Test-Path $decorationsPage) {
     $cellPages = @(
         @('enemies.html', @(245, 268, 291, 271, 294)),          # phase 2: soldier, tank body, tank cannon, plane, plane shadow
         @('towers.html', @(180, 249, 229, 275, 251, 182, 250)), # phase 3: base, cannon gun, rocket gun, ball, rocket, laser base, laser gun
-        @('ui-icons.html', @(-1, -1, -1, -1, -1, -1, 181))      # phase 4: only slot 6 (base stones) is a sheet cell; -1 = not in the sheet
+        @('ui-icons.html', @(-1, -1, -1, -1, -1, -1, 181)),     # phase 4: only slot 6 (base stones) is a sheet cell; -1 = not in the sheet
+        @('effects.html', @(21, -1))                            # phase 5: soldier death mark (slot 1 = dust texture, below)
     )
     foreach ($entry in $cellPages) {
         $page = Join-Path $root "Art/Egypt/$($entry[0])"
@@ -210,5 +212,24 @@ if (Test-Path $menuPage) {
     $path = Join-Path $UiDir 'background.png'
     Copy-Item $shot $path -Force
     Write-Output "UI: $path (1920 x 1080)"
+}
+
+# 6. Effects (phase 5): the explosion dust texture, slot 1 of Art/Egypt/effects.html
+#    (slot 0 is sheet cell 21, drawn with the other cells above).
+$fxPage = Join-Path $root 'Art/Egypt/effects.html'
+if (Test-Path $fxPage) {
+    if (-not $FxDir) { $FxDir = Join-Path $root 'Assets/Materials/Particles/Textures' }
+    New-Item -ItemType Directory -Force $FxDir | Out-Null
+    $big = New-Object System.Drawing.Bitmap (Render-Page $fxPage 1024 512)
+    $bmp = New-Object System.Drawing.Bitmap 256, 256, ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $gr = [System.Drawing.Graphics]::FromImage($bmp)
+    $gr.CompositingMode = [System.Drawing.Drawing2D.CompositingMode]::SourceCopy
+    $gr.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+    $gr.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+    $gr.DrawImage($big, (New-Object System.Drawing.Rectangle 0, 0, 256, 256), (New-Object System.Drawing.Rectangle 512, 0, 512, 512), [System.Drawing.GraphicsUnit]::Pixel)
+    $gr.Dispose(); $big.Dispose()
+    $path = Join-Path $FxDir 'DustCloud.png'
+    $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png); $bmp.Dispose()
+    Write-Output "FX: $path (256 x 256)"
 }
 Remove-Item $work -Recurse -Force -ErrorAction SilentlyContinue
